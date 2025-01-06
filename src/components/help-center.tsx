@@ -1,5 +1,5 @@
 import Image from "next/image";
-import help from "../../../public/needhelp.jpg";
+import help from "../../public/needhelp.jpg";
 import Link from "next/link";
 
 export default function HelpCenter() {
