@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function HelpCenter() {
   return (
-    <div className="w-full grid grid-cols-1 lg:grid-cols-2 py-6">
+    <div className="w-full grid grid-cols-1 lg:grid-cols-2">
       {/* Content Box */}
       <div className="bg-black flex items-center justify-center p-6 lg:p-12">
         <div className="max-w-xl py-6">

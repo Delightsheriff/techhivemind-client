@@ -9,7 +9,7 @@ import {
   BiPhone,
 } from "react-icons/bi";
 import { FaSquareXTwitter } from "react-icons/fa6";
-// import HelpCenter from "./help-center";
+import HelpCenter from "./help-center";
 
 interface FooterLink {
   label: string;
@@ -94,80 +94,82 @@ const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="w-full py-12 bg-white border-t border-border">
-      {/* <HelpCenter /> */}
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          <div className="flex flex-col space-y-4">
-            <h4 className="text-lg font-semibold text-primary">
-              Store Location
-            </h4>
-            <div className="flex items-start space-x-2">
-              <BiMap className="w-5 h-5 text-primary mt-1" />
-              <p className="text-muted-foreground">
-                1234 Main Street, City, State 12345, United States
+    <footer>
+      <HelpCenter />
+      <section className="w-full py-12 bg-white border-t border-border">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="flex flex-col space-y-4">
+              <h4 className="text-lg font-semibold text-primary">
+                Store Location
+              </h4>
+              <div className="flex items-start space-x-2">
+                <BiMap className="w-5 h-5 text-primary mt-1" />
+                <p className="text-muted-foreground">
+                  1234 Main Street, City, State 12345, United States
+                </p>
+              </div>
+              <div className="flex items-center space-x-2">
+                <BiPhone className="w-5 h-5 text-primary" />
+                <p className="text-muted-foreground">123-456-7890</p>
+              </div>
+              <div className="flex items-center space-x-2">
+                <BiMailSend className="w-5 h-5 text-primary" />
+                <a
+                  href="mailto:info@example.com"
+                  className="text-muted-foreground hover:text-primary transition-colors duration-200"
+                >
+                  info@example.com
+                </a>
+              </div>
+              <div className="flex space-x-4 mt-4">
+                <SocialLink
+                  href="#"
+                  icon={<BiLogoFacebook size={20} />}
+                  label="Facebook"
+                />
+                <SocialLink
+                  href="#"
+                  icon={<FaSquareXTwitter size={20} />}
+                  label="Twitter"
+                />
+                <SocialLink
+                  href="#"
+                  icon={<BiLogoInstagram size={20} />}
+                  label="Instagram"
+                />
+                <SocialLink
+                  href="#"
+                  icon={<BiLogoLinkedin size={20} />}
+                  label="LinkedIn"
+                />
+              </div>
+            </div>
+            {footerSections.map((section) => (
+              <FooterSection key={section.title} {...section} />
+            ))}
+          </div>
+          <div className="mt-12 pt-8 border-t border-border">
+            <div className="flex flex-col md:flex-row justify-between items-center">
+              <p className="text-sm text-muted-foreground mb-4 md:mb-0">
+                &copy; {currentYear} Delight Amadi-Sheriff. All rights reserved.
+              </p>
+              <p className="text-sm text-muted-foreground text-center md:text-right">
+                Developed by Yours truly. Inspiration from{" "}
+                <a
+                  href="https://prudhwirajk.wixsite.com/mysite"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary hover:underline focus:outline-none focus:ring-2 focus:ring-primary"
+                >
+                  Wix
+                </a>
+                .
               </p>
             </div>
-            <div className="flex items-center space-x-2">
-              <BiPhone className="w-5 h-5 text-primary" />
-              <p className="text-muted-foreground">123-456-7890</p>
-            </div>
-            <div className="flex items-center space-x-2">
-              <BiMailSend className="w-5 h-5 text-primary" />
-              <a
-                href="mailto:info@example.com"
-                className="text-muted-foreground hover:text-primary transition-colors duration-200"
-              >
-                info@example.com
-              </a>
-            </div>
-            <div className="flex space-x-4 mt-4">
-              <SocialLink
-                href="#"
-                icon={<BiLogoFacebook size={20} />}
-                label="Facebook"
-              />
-              <SocialLink
-                href="#"
-                icon={<FaSquareXTwitter size={20} />}
-                label="Twitter"
-              />
-              <SocialLink
-                href="#"
-                icon={<BiLogoInstagram size={20} />}
-                label="Instagram"
-              />
-              <SocialLink
-                href="#"
-                icon={<BiLogoLinkedin size={20} />}
-                label="LinkedIn"
-              />
-            </div>
-          </div>
-          {footerSections.map((section) => (
-            <FooterSection key={section.title} {...section} />
-          ))}
-        </div>
-        <div className="mt-12 pt-8 border-t border-border">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-sm text-muted-foreground mb-4 md:mb-0">
-              &copy; {currentYear} Delight Amadi-Sheriff. All rights reserved.
-            </p>
-            <p className="text-sm text-muted-foreground text-center md:text-right">
-              Developed by Yours truly. Inspiration from{" "}
-              <a
-                href="https://prudhwirajk.wixsite.com/mysite"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary hover:underline focus:outline-none focus:ring-2 focus:ring-primary"
-              >
-                Wix
-              </a>
-              .
-            </p>
           </div>
         </div>
-      </div>
+      </section>
     </footer>
   );
 };

@@ -48,7 +48,7 @@ const Sidebar = () => {
               Audio
               <ChevronDown className="h-4 w-4" />
             </DropdownMenuTrigger>
-            <DropdownMenuContent>
+            <DropdownMenuContent className="w-60 bg-secondary-bg">
               {audioProducts.map((item) => (
                 <DropdownMenuItem key={item.href} asChild>
                   <Link
