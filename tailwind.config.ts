@@ -10,6 +10,7 @@ export default {
   theme: {
     extend: {
       colors: {
+        "secondary-bg": "#EDEDED",
         "primary-bg": "#751fff",
         "tertiary-bg": "#d72d2d",
         background: "hsl(var(--background))",

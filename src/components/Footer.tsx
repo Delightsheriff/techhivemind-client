@@ -9,7 +9,7 @@ import {
   BiPhone,
 } from "react-icons/bi";
 import { FaSquareXTwitter } from "react-icons/fa6";
-import HelpCenter from "./help-center";
+// import HelpCenter from "./help-center";
 
 interface FooterLink {
   label: string;
@@ -94,7 +94,7 @@ const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="w-full py-12 bg-background border-t border-border">
+    <footer className="w-full py-12 bg-white border-t border-border">
       {/* <HelpCenter /> */}
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">

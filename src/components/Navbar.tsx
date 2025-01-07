@@ -2,16 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import {
-  Search,
-  ShoppingCart,
-  Heart,
-  User,
-  Headphones,
-  Speaker,
-  ChevronDown,
-  Menu,
-} from "lucide-react";
+import { Search, ShoppingCart, Heart, User, ChevronDown } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -30,33 +21,12 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
-
-const categories = [
-  { name: "Shop All", href: "/shop" },
-  { name: "Sale", href: "/sale", className: "hover:text-red-500 font-medium" },
-  { name: "Computers", href: "/computers" },
-  { name: "Tablets", href: "/tablets" },
-  { name: "Drones & Cameras", href: "/drones-cameras" },
-  { name: "Mobile", href: "/mobile" },
-  { name: "TV & Home Cinema", href: "/tv-cinema" },
-  { name: "Wearable Tech", href: "/wearables" },
-];
-
-const audioProducts = [
-  { name: "Headphones", href: "/audio/headphones", icon: Headphones },
-  { name: "Speakers", href: "/audio/speakers", icon: Speaker },
-];
+import { audioProducts, categories } from "@/lib/links";
+import Sidebar from "./Sidebar";
 
 export default function Navbar() {
-  const [isAuthenticated] = React.useState(true); // Replace with your auth logic
+  const [isAuthenticated] = React.useState(false); // Replace with your auth logic
   const [isMounted, setIsMounted] = React.useState(false);
 
   React.useEffect(() => {
@@ -68,57 +38,11 @@ export default function Navbar() {
   }
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center gap-2">
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="lg:hidden">
-                  <Menu className="h-5 w-5 font-bold" />
-                  <span className="sr-only">Toggle menu</span>
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="left" className="w-80">
-                <SheetHeader>
-                  <SheetTitle>Menu</SheetTitle>
-                </SheetHeader>
-                <nav className="mt-4 flex flex-col gap-2">
-                  {categories.map((category) => (
-                    <Link
-                      key={category.href}
-                      href={category.href}
-                      className={cn(
-                        "rounded-md px-2 py-1.5 text-sm font-medium transition-colors hover:bg-accent hover:text-primary-bg hover:text-accent-foreground",
-                        category.className
-                      )}
-                    >
-                      {category.name}
-                    </Link>
-                  ))}
-                  <DropdownMenu>
-                    <DropdownMenuTrigger className="flex w-full items-center justify-between rounded-md px-2 py-1.5 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground">
-                      Audio
-                      <ChevronDown className="h-4 w-4" />
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                      {audioProducts.map((item) => (
-                        <DropdownMenuItem key={item.href} asChild>
-                          <Link
-                            href={item.href}
-                            className="flex items-center gap-2 hover:text-primary-bg"
-                          >
-                            <item.icon className="h-4 w-4" />
-                            {item.name}
-                          </Link>
-                        </DropdownMenuItem>
-                      ))}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </nav>
-              </SheetContent>
-            </Sheet>
-
+            <Sidebar />
             <Link href="/" className="flex items-center space-x-2">
               <span className="text-lg font-bold tracking-tight">
                 TechHiveMind
@@ -265,7 +189,7 @@ export default function Navbar() {
         </div>
       </div>
 
-      <nav className="border-t">
+      <nav className="border-t border-b bg-secondary-bg">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="hidden h-12 items-center justify-between lg:flex">
             <div className="flex items-center gap-6">
