@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
-export default function Newsletter() {
+export default function NewsLetter() {
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -20,15 +20,15 @@ export default function Newsletter() {
   };
 
   return (
-    <section className="bg-primary-bg py-16 px-4">
-      <div className="max-w-[720px] mx-auto text-center">
+    <section className="bg-primary-bg container mx-auto py-16 px-4">
+      <section className="max-w-[720px] mx-auto text-center">
         <h2 className="text-2xl font-bold text-white mb-3">Newsletter</h2>
         <p className="text-white/90 text-base mb-8">
           Sign up to receive updates on new arrivals and special offers
         </p>
 
         <form onSubmit={handleSubmit} className="group relative">
-          <div className="relative flex items-center max-w-[600px] mx-auto">
+          <section className="relative flex items-center max-w-[600px] mx-auto">
             <Input
               type="email"
               value={email}
@@ -55,9 +55,9 @@ export default function Newsletter() {
             >
               {isSubmitting ? "Subscribing..." : "Subscribe"}
             </Button>
-          </div>
+          </section>
         </form>
-      </div>
+      </section>
     </section>
   );
 }

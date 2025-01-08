@@ -1,7 +1,12 @@
+import Newsletter from "../components/newsletter";
+import Brands from "../components/Brands";
+
 export default function Home() {
   return (
-    <div className="min-h-[80dvh] container mx-auto px-4 py-12">
+    <section className="min-h-[80dvh]  px-4 ">
       <h1 className="text-2xl text-center">Welcome to the TechHiveMind</h1>
-    </div>
+      <Brands />
+      <Newsletter />
+    </section>
   );
 }

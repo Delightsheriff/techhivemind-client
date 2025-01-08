@@ -94,9 +94,9 @@ const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer>
+    <footer className="mt-12 w-full bg-red-600 ">
       <HelpCenter />
-      <section className="w-full py-12 bg-white border-t border-border">
+      <section className=" py-12 bg-white border-t border-border">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <div className="flex flex-col space-y-4">
