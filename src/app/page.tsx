@@ -1,10 +1,12 @@
 import Newsletter from "../components/newsletter";
 import Brands from "../components/Brands";
+import TodaySpecial from "@/components/TodaySpecial";
 
 export default function Home() {
   return (
     <section className="min-h-[80dvh]  px-4 ">
-      <h1 className="text-2xl text-center">Welcome to the TechHiveMind</h1>
+      <div className="h-20">bnhjk</div>
+      <TodaySpecial />
       <Brands />
       <Newsletter />
     </section>

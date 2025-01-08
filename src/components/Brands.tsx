@@ -10,9 +10,9 @@ export default function Brand() {
   ];
 
   return (
-    <section className="py-12 px-4  bg-white container mx-auto mb-12">
+    <section className="py-12 px-4  bg-white container mx-auto my-12">
       <div className="max-w-6xl mx-auto">
-        <h2 className="text-3xl font-bold text-center mb-12">Brands</h2>
+        <h2 className="text-2xl font-bold text-center mb-12">Brands</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 ">
           {brands.map((brand) => (
             <div
