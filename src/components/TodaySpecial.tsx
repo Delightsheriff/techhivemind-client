@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import todays from "../../public/todays-special.png";
+import { Button } from "./ui/button";
 
 export default function TodaySpecial() {
   return (
@@ -26,12 +27,14 @@ export default function TodaySpecial() {
               <br /> See product detail pages for availability.
             </p>
           </div>
-          <Link
-            className="bg-primary-bg hover:bg-[#6D28D9] mb-3 text-white px-12 py-4 rounded-full text-base font-normal transition-colors duration-200"
-            href="#"
+          <Button
+            asChild
+            className="w-fit bg-primary-bg hover:bg-[#6D28D9] rounded-full transition-colors duration-200"
           >
-            Shop
-          </Link>
+            <Link href="#" className="px-8 py-6 text-lg">
+              Shop Now
+            </Link>
+          </Button>
         </div>
       </div>
 

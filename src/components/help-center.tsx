@@ -1,6 +1,7 @@
 import Image from "next/image";
 import help from "../../public/needhelp.jpg";
 import Link from "next/link";
+import { Button } from "./ui/button";
 
 export default function HelpCenter() {
   return (
@@ -16,12 +17,15 @@ export default function HelpCenter() {
             resources. We&apos;re here to ensure you have the best experience
             possible.
           </p>
-          <Link
-            className="bg-primary-bg hover:bg-[#6D28D9] mb-3 text-white px-6 py-4 rounded-full text-base font-normal transition-colors duration-200"
-            href="#"
+
+          <Button
+            asChild
+            className="w-fit bg-primary-bg transition-colors duration-200 hover:bg-[#6D28D9] rounded-full"
           >
-            Go to Help Center
-          </Link>
+            <Link href="#" className="px-8 py-6 text-lg">
+              Go to Help Center
+            </Link>
+          </Button>
         </div>
       </div>
 
