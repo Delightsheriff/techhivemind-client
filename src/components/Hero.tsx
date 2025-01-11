@@ -93,7 +93,7 @@ export default function Hero() {
           src={image}
           alt={`Hero background ${index + 1}`}
           fill
-          className={`object-cover transition-opacity duration-1000 ${
+          className={`object-cover object-center transition-opacity duration-1000 ${
             index === currentImageIndex ? "opacity-100" : "opacity-0"
           }`}
           priority={index === 0}

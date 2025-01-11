@@ -14,6 +14,7 @@ export default function Deals() {
             alt="Red background with iPhone"
             fill
             className="object-cover"
+            quality={100}
             priority
           />
           <div className="relative z-10 p-8">
@@ -41,6 +42,7 @@ export default function Deals() {
             src={img2}
             alt="Purple background with headphones"
             fill
+            quality={100}
             className="object-cover"
             priority
           />
