@@ -18,10 +18,12 @@ import Nav from "./bottomnav";
 import WishlistDialog from "./WishlistDialog";
 import CartDialog from "./CartDialog";
 import SearchDialog from "./SearchDialog";
+import { usePathname } from "next/navigation";
 
 export default function Navbar() {
   const [isAuthenticated] = React.useState(false); // Replace with your auth logic
   const [isMounted, setIsMounted] = React.useState(false);
+  const pathname = usePathname();
 
   React.useEffect(() => {
     setIsMounted(true);
@@ -96,12 +98,18 @@ export default function Navbar() {
                 ) : (
                   <>
                     <DropdownMenuItem asChild>
-                      <Link href="/login" className="w-full">
+                      <Link
+                        href={`/auth/signin?redirect=${pathname}`}
+                        className="w-full"
+                      >
                         Login
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                      <Link href="/register" className="w-full">
+                      <Link
+                        href={`/auth/signup?redirect=${pathname}`}
+                        className="w-full"
+                      >
                         Register
                       </Link>
                     </DropdownMenuItem>

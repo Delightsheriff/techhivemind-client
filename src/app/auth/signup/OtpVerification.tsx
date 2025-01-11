@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { OtpFormData, otpSchema } from "@/lib/validations/auth-utils";
-import { resendOtp, verifyOtp } from "@/lib/actions";
+import { resendOtp, verifyOtp } from "@/lib/actions/actions";
 import toast from "react-hot-toast";
 
 interface OtpVerificationProps {

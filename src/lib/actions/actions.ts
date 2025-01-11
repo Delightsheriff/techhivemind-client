@@ -1,4 +1,4 @@
-import { OtpFormData, SignupFormData } from "./validations/auth-utils";
+import { OtpFormData, SignupFormData } from "../validations/auth-utils";
 
 const URL = process.env.NEXT_PUBLIC_API_URL;
 

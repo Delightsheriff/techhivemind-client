@@ -18,7 +18,7 @@ import {
 import FormInput from "@/components/FormInput";
 import OtpVerification from "./OtpVerification";
 import { SignupFormData, signupSchema } from "@/lib/validations/auth-utils";
-import { signup } from "@/lib/actions";
+import { signup } from "@/lib/actions/actions";
 import toast from "react-hot-toast";
 
 export default function SignupPage() {
