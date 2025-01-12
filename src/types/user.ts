@@ -1,3 +1,6 @@
+import { JWT } from "next-auth/jwt";
+import { Session } from "next-auth";
+
 export interface User {
   _id: string;
   firstName: string;
@@ -12,9 +15,17 @@ export interface User {
   accessToken: string;
 }
 
-export interface AuthResponse {
+export interface Token extends JWT {
   accessToken: string;
   refreshToken: string;
+  accessTokenExpires: number;
   user: User;
-  message: string;
+  error?: string;
+}
+
+export interface CustomSession extends Session {
+  user?: User;
+  accessToken?: string;
+  error?: string;
+  accessTokenExpires?: number;
 }
