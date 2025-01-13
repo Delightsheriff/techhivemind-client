@@ -30,10 +30,11 @@ export default function OtpVerification({
     formState: { errors, isSubmitting },
     setValue,
     watch,
+    reset,
   } = useForm<OtpFormData>({
     resolver: zodResolver(otpSchema),
     defaultValues: {
-      otp: ["", "", "", "", "", ""],
+      otp: "",
       email: email,
     },
   });
@@ -74,13 +75,15 @@ export default function OtpVerification({
   const handleResend = () => {
     setCountdown(60);
     setCanResend(false);
+    reset({ otp: "", email: email });
     resendOtp(email);
-    // console.log("Resending OTP");
   };
 
   const handleInputChange = (index: number, value: string) => {
     if (value.length <= 1) {
-      setValue(`otp.${index}` as `otp.${0 | 1 | 2 | 3 | 4 | 5}`, value);
+      const newOtp = otpWatch.split("");
+      newOtp[index] = value;
+      setValue("otp", newOtp.join(""));
       if (value !== "" && index < 5) {
         inputRefs.current[index + 1]?.focus();
       }
@@ -106,7 +109,7 @@ export default function OtpVerification({
             inputMode="numeric"
             maxLength={1}
             className="w-12 h-12 text-center text-2xl"
-            {...register(`otp.${index}` as `otp.${0 | 1 | 2 | 3 | 4 | 5}`)}
+            value={otpWatch[index] || ""}
             onChange={(e) => handleInputChange(index, e.target.value)}
             onKeyDown={(e) => handleKeyDown(index, e)}
             ref={(el) => {
@@ -116,10 +119,10 @@ export default function OtpVerification({
         ))}
       </div>
       <div>
-        <Input type="text" hidden {...register("email")} defaultValue={email} />
+        <Input type="hidden" {...register("email")} defaultValue={email} />
       </div>
       {errors.otp && (
-        <p className="text-sm text-red-500">Please enter a valid 6-digit OTP</p>
+        <p className="text-sm text-red-500">{errors.otp.message}</p>
       )}
       <Button type="submit" className="w-full" disabled={isSubmitting}>
         {isSubmitting ? "Verifying..." : "Verify OTP"}

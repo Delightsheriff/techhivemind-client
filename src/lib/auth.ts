@@ -1,15 +1,15 @@
-import Credentials from "next-auth/providers/credentials";
-
-import { CustomSession, Token, User } from "@/types/user";
-import NextAuth from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
+import { CustomSession, Token } from "@/types/user";
+import { NextAuthConfig, User } from "next-auth";
 
 const URL = process.env.NEXT_PUBLIC_API_URL;
 const TOKEN_EXPIRATION_TIME =
   process.env.TOKEN_EXPIRATION_TIME || 15 * 60 * 1000;
 
-export const authOptions = NextAuth({
+export const authOptions: NextAuthConfig = {
+  secret: process.env.AUTH_SECRET,
   providers: [
-    Credentials({
+    CredentialsProvider({
       name: "Credentials",
       credentials: {
         email: { label: "Email", type: "text" },
@@ -24,16 +24,12 @@ export const authOptions = NextAuth({
             },
             body: JSON.stringify(credentials),
           });
-
           const result = await response.json();
-
           if (!response.ok) {
             throw new Error(result.message || "Invalid login credentials");
           }
-
           // Extract necessary data from the response
           const { accessToken, refreshToken, user } = result;
-
           // Return the data to be stored in the session and token
           return { ...user, accessToken, refreshToken } as User;
         } catch (error) {
@@ -95,6 +91,7 @@ export const authOptions = NextAuth({
         error: "RefreshAccessTokenError",
       };
     },
+    // Session
     async session({
       session,
       token,
@@ -112,9 +109,9 @@ export const authOptions = NextAuth({
   session: {
     strategy: "jwt",
   },
-});
+};
 
-async function refreshAccessToken(token: Token): Promise<Token | null> {
+export async function refreshAccessToken(token: Token): Promise<Token | null> {
   try {
     const response = await fetch(`${URL}auth/refresh`, {
       method: "POST",

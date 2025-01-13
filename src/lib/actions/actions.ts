@@ -3,6 +3,7 @@ import { OtpFormData, SignupFormData } from "../validations/auth-utils";
 const URL = process.env.NEXT_PUBLIC_API_URL;
 
 export async function signup(data: SignupFormData) {
+  console.log(data);
   try {
     const response = await fetch(`${URL}auth/signup`, {
       method: "POST",
@@ -15,6 +16,7 @@ export async function signup(data: SignupFormData) {
     const result = await response.json();
 
     if (!response.ok) {
+      console.log(result);
       throw new Error(result.message || "An error occurred while signing up");
     }
 
@@ -31,6 +33,7 @@ export async function signup(data: SignupFormData) {
 }
 
 export async function verifyOtp(data: OtpFormData) {
+  console.log(data);
   try {
     const response = await fetch(`${URL}auth/verify-email`, {
       method: "POST",
