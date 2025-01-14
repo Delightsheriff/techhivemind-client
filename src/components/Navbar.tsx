@@ -67,53 +67,29 @@ export default function Navbar() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
+                {/* Always show these items */}
+                <DropdownMenuItem asChild>
+                  <Link href="/account">My Account</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/orders">Orders</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/vendor">Vendor</Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+
                 {isAuthenticated ? (
-                  <>
-                    <div className="flex items-center justify-start gap-2 p-2">
-                      <div className="rounded-full bg-muted p-1">
-                        <User className="h-8 w-8 text-muted-foreground" />
-                      </div>
-                      <div className="space-y-1">
-                        <p className="text-sm font-medium leading-none">
-                          John Doe
-                        </p>
-                        <p className="text-xs leading-none text-muted-foreground">
-                          john@example.com
-                        </p>
-                      </div>
-                    </div>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem asChild>
-                      <Link href="/account">My Account</Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link href="/orders">Orders</Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link href="/settings">Settings</Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem>Sign Out</DropdownMenuItem>
-                  </>
+                  <DropdownMenuItem>Sign Out</DropdownMenuItem>
                 ) : (
-                  <>
-                    <DropdownMenuItem asChild>
-                      <Link
-                        href={`/auth/signin?redirect=${pathname}`}
-                        className="w-full"
-                      >
-                        Login
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link
-                        href={`/auth/signup?redirect=${pathname}`}
-                        className="w-full"
-                      >
-                        Register
-                      </Link>
-                    </DropdownMenuItem>
-                  </>
+                  <DropdownMenuItem asChild>
+                    <Link
+                      href={`/auth/signin?redirect=${pathname}`}
+                      className="w-full"
+                    >
+                      Sign In
+                    </Link>
+                  </DropdownMenuItem>
                 )}
               </DropdownMenuContent>
             </DropdownMenu>
