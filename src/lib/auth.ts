@@ -16,8 +16,9 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
+        console.log(URL);
         try {
-          const response = await fetch(`${URL}auth/signin`, {
+          const res = await fetch(`${URL}auth/signin`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -27,21 +28,28 @@ export const authOptions: NextAuthOptions = {
               password: credentials?.password,
             }),
           });
-          const result = await response.json();
-          // console.log(result);
 
-          if (!response.ok) {
+          const response = await res.json();
+
+          // Check the actual HTTP status code
+          if (!res.ok) {
             throw new Error(
-              result.error || result.message || "Invalid login credentials"
+              response.error || response.message || "Invalid login credentials"
             );
           }
-          // Extract necessary data from the response
-          const { accessToken, refreshToken, user } = result;
-          // Return the data to be stored in the session and token
-          return { ...user, accessToken, refreshToken } as User;
+
+          if (response.user) {
+            return {
+              ...response.user,
+              accessToken: response.accessToken,
+              refreshToken: response.refreshToken,
+            } as User;
+          }
+
+          return null;
         } catch (error) {
           console.error("Error during login:", error);
-          return null;
+          throw error;
         }
       },
     }),

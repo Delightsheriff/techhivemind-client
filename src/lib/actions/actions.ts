@@ -3,7 +3,6 @@ import { OtpFormData, SignupFormData } from "../validations/auth-utils";
 const URL = process.env.NEXT_PUBLIC_API_URL;
 
 export async function signup(data: SignupFormData) {
-  console.log(data);
   try {
     const response = await fetch(`${URL}auth/signup`, {
       method: "POST",
@@ -35,7 +34,6 @@ export async function signup(data: SignupFormData) {
 }
 
 export async function verifyOtp(data: OtpFormData) {
-  console.log(data);
   try {
     const response = await fetch(`${URL}auth/verify-email`, {
       method: "POST",

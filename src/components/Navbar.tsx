@@ -21,16 +21,7 @@ import { useSession, signOut } from "next-auth/react";
 
 export default function Navbar() {
   const { status } = useSession();
-  const [isMounted, setIsMounted] = React.useState(false);
   const pathname = usePathname();
-
-  React.useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  if (!isMounted) {
-    return null;
-  }
 
   const isAuthenticated = status === "authenticated";
 
@@ -58,7 +49,12 @@ export default function Navbar() {
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="shrink-0">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="shrink-0"
+                  disabled={status === "loading"}
+                >
                   <User className="h-5 w-5" />
                   <span className="sr-only">Open user menu</span>
                 </Button>

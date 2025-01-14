@@ -44,13 +44,12 @@ export default function LoginPage() {
       });
 
       if (result?.error) {
-        toast.error(
-          result?.error || "Invalid email or password. Please try again."
-        );
         setError(result.error);
-      } else {
+      } else if (result?.ok) {
         toast.success("Signed in successfully");
         router.push(redirectTo);
+      } else {
+        throw new Error("Unexpected response from server");
       }
     } catch (error) {
       console.error("Login error:", error);
@@ -106,7 +105,9 @@ export default function LoginPage() {
           <p className="text-sm text-center w-full">
             Don&apos;t have an account?{" "}
             <Link
-              href={`/signup?redirect=${searchParams.get("redirect") || "/"}`}
+              href={`/auth/signup?redirect=${
+                searchParams.get("redirect") || "/"
+              }`}
               className="text-primary hover:underline"
             >
               Sign up
