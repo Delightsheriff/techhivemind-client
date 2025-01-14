@@ -44,11 +44,12 @@ export default function SignupPage() {
       setUserEmail(data.email);
       setShowOtp(true);
       toast.success("Signup successful! Please verify your email.");
+    } else {
+      toast.error(result.error);
     }
   };
 
   const handleVerified = async (redirect: string) => {
-    toast.success("Account created successfully! Please log in.");
     router.push(`/auth/signin?redirect=${redirect}`);
   };
 

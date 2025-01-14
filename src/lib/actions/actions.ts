@@ -17,7 +17,9 @@ export async function signup(data: SignupFormData) {
 
     if (!response.ok) {
       console.log(result);
-      throw new Error(result.message || "An error occurred while signing up");
+      throw new Error(
+        result.message || result.error || "An error occurred while signing up"
+      );
     }
 
     return { success: true, data: result };
@@ -47,7 +49,9 @@ export async function verifyOtp(data: OtpFormData) {
 
     if (!response.ok) {
       throw new Error(
-        result.message || "An error occurred while verifying OTP"
+        result.message ||
+          result.error ||
+          "An error occurred while verifying OTP"
       );
     }
 
@@ -77,7 +81,9 @@ export async function resendOtp(email: string) {
 
     if (!response.ok) {
       throw new Error(
-        result.message || "An error occurred while resending OTP"
+        result.message ||
+          result.error ||
+          "An error occurred while resending OTP"
       );
     }
 

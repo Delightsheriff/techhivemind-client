@@ -1,12 +1,12 @@
 import CredentialsProvider from "next-auth/providers/credentials";
 import { CustomSession, Token } from "@/types/user";
-import { NextAuthConfig, User } from "next-auth";
+import { NextAuthOptions, User } from "next-auth";
 
 const URL = process.env.NEXT_PUBLIC_API_URL;
 const TOKEN_EXPIRATION_TIME =
   process.env.TOKEN_EXPIRATION_TIME || 15 * 60 * 1000;
 
-export const authOptions: NextAuthConfig = {
+export const authOptions: NextAuthOptions = {
   secret: process.env.AUTH_SECRET,
   providers: [
     CredentialsProvider({
@@ -17,16 +17,23 @@ export const authOptions: NextAuthConfig = {
       },
       async authorize(credentials) {
         try {
-          const response = await fetch(`${URL}auth/login`, {
+          const response = await fetch(`${URL}auth/signin`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify(credentials),
+            body: JSON.stringify({
+              email: credentials?.email,
+              password: credentials?.password,
+            }),
           });
           const result = await response.json();
+          console.log(result);
+
           if (!response.ok) {
-            throw new Error(result.message || "Invalid login credentials");
+            throw new Error(
+              result.error || result.message || "Invalid login credentials"
+            );
           }
           // Extract necessary data from the response
           const { accessToken, refreshToken, user } = result;
