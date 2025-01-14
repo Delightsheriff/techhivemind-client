@@ -1,6 +1,6 @@
 "use client";
-import React from "react";
-import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,6 +11,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import Link from "next/link";
 
 interface WishlistDialogProps {
   isAuthenticated: boolean;
@@ -19,14 +20,16 @@ interface WishlistDialogProps {
 export default function WishlistDialog({
   isAuthenticated,
 }: WishlistDialogProps) {
-  const router = useRouter();
+  const pathname = usePathname();
+  const [isOpen, setIsOpen] = useState(false);
 
-  const handleLoginRedirect = () => {
-    router.push("/login"); // Navigate to the login page
-  };
+  // Effect to handle navigation changes
+  useEffect(() => {
+    setIsOpen(false);
+  }, [pathname]);
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button variant="ghost" size="icon" className="shrink-0">
           <Heart className="h-5 w-5" />
@@ -50,8 +53,8 @@ export default function WishlistDialog({
               <p className="text-sm text-muted-foreground">
                 Please log in to view your wishlist
               </p>
-              <Button className="mt-2" onClick={handleLoginRedirect}>
-                Log In
+              <Button className="mt-2" asChild onClick={() => setIsOpen(false)}>
+                <Link href={`/auth/signin?redirect=${pathname}`}>Sign In</Link>
               </Button>
             </div>
           )}

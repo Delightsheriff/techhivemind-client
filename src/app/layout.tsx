@@ -3,7 +3,9 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
-import { Toaster } from "react-hot-toast";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import Providers from "@/components/Providers";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -20,41 +22,23 @@ export const metadata: Metadata = {
     "A central place for all tech products, representing a hub where customers can find various tech gadgets.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await getServerSession(authOptions);
+
   return (
     <html lang="en">
       <body className={`${inter.className}  antialiased bg-secondary-bg`}>
-        <main className="min-h-dvh">
-          <Navbar />
-          {children}
-          <Footer />
-        </main>
-        <Toaster
-          position="top-center"
-          gutter={12}
-          containerStyle={{
-            margin: "8px",
-          }}
-          toastOptions={{
-            success: {
-              duration: 3000,
-            },
-            error: {
-              duration: 5000,
-            },
-            style: {
-              fontSize: "16px",
-              maxWidth: "500px",
-              padding: "16px 24px",
-              backgroundColor: "#fff",
-              color: "#374151",
-            },
-          }}
-        />
+        <Providers session={session}>
+          <main className="min-h-dvh">
+            <Navbar />
+            {children}
+            <Footer />
+          </main>
+        </Providers>
       </body>
     </html>
   );

@@ -2,6 +2,7 @@ import { JWT } from "next-auth/jwt";
 import { Session } from "next-auth";
 
 export interface User {
+  id: string;
   _id: string;
   firstName: string;
   lastName: string;

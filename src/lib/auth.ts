@@ -121,7 +121,7 @@ export const authOptions: NextAuthOptions = {
 
 export async function refreshAccessToken(token: Token): Promise<Token | null> {
   try {
-    const response = await fetch(`${URL}auth/refresh`, {
+    const response = await fetch(`${URL}auth/refresh-token`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
