@@ -1,88 +1,110 @@
-import { CartItem } from "@/types/product";
+// lib/stores/cartStore.ts
 import { create } from "zustand";
 import * as cartActions from "@/lib/actions/cartAction";
+import debounce from "lodash/debounce";
+import { CartItem } from "@/types/product";
 
 interface CartStore {
+  total: number;
   items: CartItem[];
   isLoading: boolean;
   error: string | null;
   fetchCart: () => Promise<void>;
   addToCart: (item: CartItem) => Promise<void>;
-  removeFromCart: (item: CartItem) => Promise<void>;
-  updateQuantity: (item: CartItem) => Promise<void>;
-  clearCart: () => void;
-  setError: (error: string | null) => void;
+  removeFromCart: (productId: string) => Promise<void>;
+  updateQuantity: (productId: string, quantity: number) => Promise<void>;
 }
 
-export const useCartStore = create<CartStore>((set) => ({
+// Debounce the update quantity API call
+const debouncedUpdateQuantity = debounce(cartActions.updateQuantity, 500);
+
+export const useCartStore = create<CartStore>((set, get) => ({
   items: [],
+  total: 0,
   isLoading: false,
   error: null,
-
-  setError: (error) => set({ error }),
 
   fetchCart: async () => {
     set({ isLoading: true, error: null });
     try {
-      const cartItems = await cartActions.fetchCart();
-      set({ items: cartItems, isLoading: false });
+      const cart = await cartActions.fetchCart();
+      set({ items: cart.cartItems, total: cart.total, isLoading: false });
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Failed to fetch cart";
-      set({ error: errorMessage, isLoading: false });
+      set({
+        error: error instanceof Error ? error.message : "Error loading cart",
+        isLoading: false,
+      });
     }
   },
 
   addToCart: async (item: CartItem) => {
-    set({ isLoading: true, error: null });
+    // Optimistic update
+    const currentItems = get().items;
+    set({
+      items: [...currentItems, item],
+      isLoading: true,
+    });
+
     try {
       await cartActions.addToCart(item);
-      const cartItems = await cartActions.fetchCart();
-      set({ items: cartItems, isLoading: false });
+      const cart = await cartActions.fetchCart();
+      set({ items: cart.cartItems, total: cart.total, isLoading: false });
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Failed to add to cart";
-      set({ error: errorMessage, isLoading: false });
-      throw error;
+      console.log(error);
+      // Revert on error
+      set({
+        items: currentItems,
+        error: "Failed to add item",
+        isLoading: false,
+      });
     }
   },
 
-  removeFromCart: async (item: CartItem) => {
-    set({ isLoading: true, error: null });
+  removeFromCart: async (productId: string) => {
+    // Optimistic update
+    const currentItems = get().items;
+    set({
+      items: currentItems.filter((item) => item.product._id !== productId),
+      isLoading: true,
+    });
+
     try {
-      await cartActions.removeFromCart(item);
-      const cartItems = await cartActions.fetchCart();
-      set({ items: cartItems, isLoading: false });
+      await cartActions.removeFromCart(productId);
+      const cart = await cartActions.fetchCart();
+      set({ items: cart.cartItems, total: cart.total, isLoading: false });
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Failed to remove from cart";
-      set({ error: errorMessage, isLoading: false });
+      console.log(error);
+      // Revert on error
+      set({
+        items: currentItems,
+        error: "Failed to remove item",
+        isLoading: false,
+      });
     }
   },
 
-  updateQuantity: async (item: CartItem) => {
-    set({ isLoading: true, error: null });
-    try {
-      await cartActions.updateQuantity(item);
-      const cartItems = await cartActions.fetchCart();
-      set({ items: cartItems, isLoading: false });
-    } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Failed to update quantity";
-      set({ error: errorMessage, isLoading: false });
-    }
-  },
+  updateQuantity: async (productId: string, quantity: number) => {
+    if (quantity < 1) return;
 
-  clearCart: async () => {
-    set({ isLoading: true, error: null });
+    // Optimistic update
+    const currentItems = get().items;
+    const updatedItems = currentItems.map((item) =>
+      item.product._id === productId ? { ...item, quantity } : item
+    );
+
+    set({ items: updatedItems, isLoading: true });
+
     try {
-      await cartActions.clearCart();
-      set({ items: [], isLoading: false });
+      await debouncedUpdateQuantity(productId, quantity);
+      set({ isLoading: false });
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Failed to clear cart";
-      set({ error: errorMessage, isLoading: false });
-      throw error;
+      console.log(error);
+      // Revert on error
+      set({
+        items: currentItems,
+        error: "Failed to update quantity",
+        isLoading: false,
+      });
     }
   },
 }));

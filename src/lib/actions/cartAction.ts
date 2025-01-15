@@ -1,3 +1,4 @@
+// lib/actions/cartActions.ts
 "use server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth";
@@ -5,29 +6,24 @@ import { CartItem } from "@/types/product";
 
 const URL = process.env.NEXT_PUBLIC_API_URL;
 
-// Get the access token from the session
 async function getAccessToken() {
   const session = await getServerSession(authOptions);
-  if (!session || !session.accessToken) {
-    throw new Error("Unauthorized: Please log in.");
+  if (!session?.accessToken) {
+    throw new Error("Please log in to continue");
   }
   return session.accessToken;
 }
 
-// Fetch the cart items
 export async function fetchCart() {
   const accessToken = await getAccessToken();
   const response = await fetch(`${URL}cart/get`, {
     headers: { Authorization: `Bearer ${accessToken}` },
   });
-  if (!response.ok) {
-    throw new Error("Failed to fetch cart");
-  }
+  if (!response.ok) throw new Error("Failed to fetch cart");
   const data = await response.json();
   return data.cart;
 }
 
-// Add an item to the cart
 export async function addToCart(item: CartItem) {
   const accessToken = await getAccessToken();
   const response = await fetch(`${URL}cart/add`, {
@@ -41,14 +37,11 @@ export async function addToCart(item: CartItem) {
       quantity: item.quantity,
     }),
   });
-  if (!response.ok) {
-    throw new Error("Failed to add item to cart");
-  }
-  return { success: true };
+  if (!response.ok) throw new Error("Failed to add item");
+  return response.json();
 }
 
-// Remove an item from the cart
-export async function removeFromCart(item: CartItem) {
+export async function removeFromCart(productId: string) {
   const accessToken = await getAccessToken();
   const response = await fetch(`${URL}cart/remove`, {
     method: "DELETE",
@@ -56,16 +49,13 @@ export async function removeFromCart(item: CartItem) {
       Authorization: `Bearer ${accessToken}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ productId: item.product._id }),
+    body: JSON.stringify({ productId }),
   });
-  if (!response.ok) {
-    throw new Error("Failed to remove item from cart");
-  }
-  return { success: true };
+  if (!response.ok) throw new Error("Failed to remove item");
+  return response.json();
 }
 
-// Update the quantity of an item in the cart
-export async function updateQuantity(item: CartItem) {
+export async function updateQuantity(productId: string, quantity: number) {
   const accessToken = await getAccessToken();
   const response = await fetch(`${URL}cart/update`, {
     method: "PATCH",
@@ -73,26 +63,8 @@ export async function updateQuantity(item: CartItem) {
       Authorization: `Bearer ${accessToken}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      productId: item.product._id,
-      quantity: item.quantity,
-    }),
+    body: JSON.stringify({ productId, quantity }),
   });
-  if (!response.ok) {
-    throw new Error("Failed to update item quantity");
-  }
-  return { success: true };
-}
-
-// Clear the cart
-export async function clearCart() {
-  const accessToken = await getAccessToken();
-  const response = await fetch(`${URL}cart/clear`, {
-    method: "DELETE",
-    headers: { Authorization: `Bearer ${accessToken}` },
-  });
-  if (!response.ok) {
-    throw new Error("Failed to clear cart");
-  }
-  return { success: true };
+  if (!response.ok) throw new Error("Failed to update quantity");
+  return response.json();
 }
