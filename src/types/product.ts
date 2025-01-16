@@ -26,3 +26,18 @@ export interface CartItem {
   };
   quantity: number;
 }
+
+export interface WishList {
+  product: {
+    _id: string;
+    name: string;
+    price: number;
+    description: string;
+    category: string;
+    stock: number;
+    onSale: boolean;
+    salePrice: number;
+    images: string[];
+    vendor: string;
+  };
+}

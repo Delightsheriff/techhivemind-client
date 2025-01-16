@@ -1,6 +1,7 @@
 "use server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth";
+import { WishList } from "@/types/product";
 
 const URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -24,7 +25,7 @@ export async function fetchWishlist() {
 }
 
 // function to add a product to the wishlist
-export async function addToWishlist(productId: string) {
+export async function addToWishlist(item: WishList) {
   const accessToken = await getAccessToken();
   const response = await fetch(`${URL}wishlist/add`, {
     method: "POST",
@@ -32,7 +33,7 @@ export async function addToWishlist(productId: string) {
       Authorization: `Bearer ${accessToken}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ productId }),
+    body: JSON.stringify({ productId: item.product._id }),
   });
   if (!response.ok) throw new Error("Failed to add item");
   return response.json();
