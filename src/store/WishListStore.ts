@@ -20,7 +20,7 @@ export const useWishListStore = create<WishListStore>((set, get) => ({
     set({ isLoading: true, error: null });
     try {
       const wishlist = await wishlistActions.fetchWishlist();
-      set({ items: wishlist, isLoading: false });
+      set({ items: wishlist.products, isLoading: false });
     } catch (error) {
       set({
         error: error instanceof Error ? error.message : "Error loading cart",
@@ -38,7 +38,7 @@ export const useWishListStore = create<WishListStore>((set, get) => ({
     try {
       await wishlistActions.addToWishlist(item);
       const wishlist = await wishlistActions.fetchWishlist();
-      set({ isLoading: false, items: wishlist });
+      set({ isLoading: false, items: wishlist.products });
     } catch (error) {
       set({
         items: currentItems,
@@ -51,13 +51,13 @@ export const useWishListStore = create<WishListStore>((set, get) => ({
   removeFromWishList: async (productId: string) => {
     const currentItems = get().items;
     set({
-      items: currentItems.filter((item) => item.product._id !== productId),
+      items: currentItems.filter((item) => item._id !== productId),
       isLoading: true,
     });
     try {
       await wishlistActions.removeFromWishlist(productId);
       const wishlist = await wishlistActions.fetchWishlist();
-      set({ isLoading: false, items: wishlist });
+      set({ isLoading: false, items: wishlist.products });
     } catch (error) {
       set({
         items: currentItems,

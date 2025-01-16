@@ -19,6 +19,7 @@ import SearchDialog from "./SearchDialog";
 import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import { useCartStore } from "@/store/CartStore";
+import { useWishListStore } from "@/store/WishListStore";
 
 export default function Navbar() {
   const { status } = useSession();
@@ -27,12 +28,14 @@ export default function Navbar() {
   const isAuthenticated = status === "authenticated";
 
   const fetchCart = useCartStore((state) => state.fetchCart);
+  const fetchWishList = useWishListStore((state) => state.fetchWishList);
 
   React.useEffect(() => {
     if (isAuthenticated) {
       fetchCart();
+      fetchWishList();
     }
-  }, [isAuthenticated, fetchCart]);
+  }, [isAuthenticated, fetchCart, fetchWishList]);
 
   const handleSignOut = async () => {
     await signOut({ callbackUrl: "/" });

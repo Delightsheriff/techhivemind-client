@@ -23,21 +23,8 @@ interface CartDialogProps {
 export default function CartDialog({ isAuthenticated }: CartDialogProps) {
   const [isOpen, setIsOpen] = React.useState(false);
   const pathname = usePathname();
-  const {
-    items,
-    isLoading,
-    error,
-    // fetchCart,
-    updateQuantity,
-    removeFromCart,
-    total,
-  } = useCartStore();
-
-  // useEffect(() => {
-  //   if (isAuthenticated && isOpen) {
-  //     fetchCart();
-  //   }
-  // }, [isAuthenticated, isOpen, fetchCart]);
+  const { items, isLoading, error, updateQuantity, removeFromCart, total } =
+    useCartStore();
 
   useEffect(() => {
     setIsOpen(false);
@@ -92,11 +79,14 @@ export default function CartDialog({ isAuthenticated }: CartDialogProps) {
                   className="flex items-center py-4 border-b"
                 >
                   {/* Product Image */}
-                  <div className="h-16 w-16 bg-gray-100 rounded-md overflow-hidden mr-4">
+                  <div className="h-16 w-16 bg-gray-100 rounded-md overflow-hidden mr-4 relative">
                     <Image
                       src={item.product.images[0] || "/placeholder.svg"}
                       alt={item.product.name}
-                      className="h-full w-full object-cover"
+                      fill
+                      sizes="64px"
+                      className="object-cover"
+                      quality={100}
                     />
                   </div>
 

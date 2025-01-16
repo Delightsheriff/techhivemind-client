@@ -1,71 +1,3 @@
-// "use client";
-// import React, { useEffect, useState } from "react";
-// import { usePathname } from "next/navigation";
-// import { Heart } from "lucide-react";
-// import { Button } from "@/components/ui/button";
-// import {
-//   Dialog,
-//   DialogContent,
-//   DialogDescription,
-//   DialogHeader,
-//   DialogTitle,
-//   DialogTrigger,
-// } from "@/components/ui/dialog";
-// import Link from "next/link";
-// import { useWishListStore } from "@/store/WishListStore";
-
-// interface WishlistDialogProps {
-//   isAuthenticated: boolean;
-// }
-
-// export default function WishlistDialog({
-//   isAuthenticated,
-// }: WishlistDialogProps) {
-//   const [isOpen, setIsOpen] = useState(false);
-//   const pathname = usePathname();
-//   const { items, isLoading, error, removeFromWishList } = useWishListStore();
-
-//   // Effect to handle navigation changes
-//   useEffect(() => {
-//     setIsOpen(false);
-//   }, [pathname]);
-
-//   return (
-//     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-//       <DialogTrigger asChild>
-//         <Button variant="ghost" size="icon" className="shrink-0">
-//           <Heart className="h-5 w-5" />
-//           <span className="sr-only">Open wishlist</span>
-//         </Button>
-//       </DialogTrigger>
-//       <DialogContent>
-//         <DialogHeader>
-//           <DialogTitle>Your Wishlist</DialogTitle>
-//           <DialogDescription>
-//             Items you&apos;ve saved for later
-//           </DialogDescription>
-//         </DialogHeader>
-//         <div className="mt-4">
-//           {isAuthenticated ? (
-//             <div className="text-center text-sm text-muted-foreground">
-//               Your wishlist is empty
-//             </div>
-//           ) : (
-//             <div className="text-center">
-//               <p className="text-sm text-muted-foreground">
-//                 Please log in to view your wishlist
-//               </p>
-//               <Button className="mt-2" asChild onClick={() => setIsOpen(false)}>
-//                 <Link href={`/auth/signin?redirect=${pathname}`}>Sign In</Link>
-//               </Button>
-//             </div>
-//           )}
-//         </div>
-//       </DialogContent>
-//     </Dialog>
-//   );
-// }
-
 "use client";
 import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
@@ -95,18 +27,10 @@ export default function WishlistDialog({
   const pathname = usePathname();
   const { items, isLoading, error, removeFromWishList } = useWishListStore();
 
-  // // Fetch wishlist when dialog opens and user is authenticated
-  // useEffect(() => {
-  //   if (isAuthenticated && isOpen) {
-  //     fetchWishlist();
-  //   }
-  // }, [isAuthenticated, isOpen, fetchWishlist]);
-
   // Effect to handle navigation changes
   useEffect(() => {
     setIsOpen(false);
   }, [pathname]);
-
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
@@ -147,25 +71,28 @@ export default function WishlistDialog({
             <>
               {items.map((item) => (
                 <div
-                  key={item.product._id}
+                  key={item?._id}
                   className="flex items-center py-4 border-b"
                 >
                   {/* Product Image */}
-                  <div className="h-16 w-16 bg-gray-100 rounded-md overflow-hidden mr-4">
+                  <div className="h-16 w-16 bg-gray-100 rounded-md overflow-hidden mr-4 relative">
                     <Image
-                      src={item.product.images[0]}
-                      alt={item.product.name}
-                      className="h-full w-full object-cover"
+                      src={item.images[0] || "/placeholder.svg"}
+                      alt={item.name}
+                      fill
+                      sizes="64px"
+                      className="object-cover"
+                      quality={100}
                     />
                   </div>
 
                   {/* Product Details */}
                   <div className="flex-1">
-                    <h3 className="font-medium">{item.product.name}</h3>
+                    <h3 className="font-medium">{item.name}</h3>
                     <p className="text-sm text-muted-foreground">
-                      {item.product.onSale
-                        ? formatPrice(item.product.salePrice)
-                        : formatPrice(item.product.price)}
+                      {item.onSale
+                        ? formatPrice(item.salePrice)
+                        : formatPrice(item.price)}
                     </p>
                   </div>
 
@@ -174,7 +101,7 @@ export default function WishlistDialog({
                     variant="ghost"
                     size="icon"
                     disabled={isLoading}
-                    onClick={() => removeFromWishList(item.product._id)}
+                    onClick={() => removeFromWishList(item._id)}
                     className="ml-2"
                   >
                     <Trash className="h-4 w-4" />

@@ -21,6 +21,7 @@ export async function fetchWishlist() {
   });
   if (!response.ok) throw new Error("Failed to fetch wishlist");
   const data = await response.json();
+
   return data.wishlist;
 }
 
@@ -33,7 +34,7 @@ export async function addToWishlist(item: WishList) {
       Authorization: `Bearer ${accessToken}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ productId: item.product._id }),
+    body: JSON.stringify({ productId: item._id }),
   });
   if (!response.ok) throw new Error("Failed to add item");
   return response.json();
