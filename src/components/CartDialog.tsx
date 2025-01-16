@@ -14,6 +14,7 @@ import {
 import Link from "next/link";
 import { useCartStore } from "@/store/CartStore";
 import { formatPrice } from "@/lib/utils";
+import Image from "next/image";
 
 interface CartDialogProps {
   isAuthenticated: boolean;
@@ -26,17 +27,17 @@ export default function CartDialog({ isAuthenticated }: CartDialogProps) {
     items,
     isLoading,
     error,
-    fetchCart,
+    // fetchCart,
     updateQuantity,
     removeFromCart,
     total,
   } = useCartStore();
 
-  useEffect(() => {
-    if (isAuthenticated && isOpen) {
-      fetchCart();
-    }
-  }, [isAuthenticated, isOpen, fetchCart]);
+  // useEffect(() => {
+  //   if (isAuthenticated && isOpen) {
+  //     fetchCart();
+  //   }
+  // }, [isAuthenticated, isOpen, fetchCart]);
 
   useEffect(() => {
     setIsOpen(false);
@@ -90,6 +91,15 @@ export default function CartDialog({ isAuthenticated }: CartDialogProps) {
                   key={item.product._id}
                   className="flex items-center py-4 border-b"
                 >
+                  {/* Product Image */}
+                  <div className="h-16 w-16 bg-gray-100 rounded-md overflow-hidden mr-4">
+                    <Image
+                      src={item.product.images[0] || "/placeholder.svg"}
+                      alt={item.product.name}
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+
                   <div className="flex-1">
                     <h3 className="font-medium">{item.product.name}</h3>
                     <p className="text-sm text-muted-foreground">
@@ -116,7 +126,9 @@ export default function CartDialog({ isAuthenticated }: CartDialogProps) {
                     <Button
                       variant="outline"
                       size="icon"
-                      disabled={isLoading}
+                      disabled={
+                        isLoading || item.quantity >= item.product.stock
+                      }
                       onClick={() =>
                         updateQuantity(item.product._id, item.quantity + 1)
                       }
