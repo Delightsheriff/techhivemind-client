@@ -5,6 +5,7 @@ import debounce from "lodash/debounce";
 import { CartItem } from "@/types/product";
 
 interface CartStore {
+  cartId: string | null;
   total: number;
   items: CartItem[];
   isLoading: boolean;
@@ -20,6 +21,7 @@ const debouncedUpdateQuantity = debounce(cartActions.updateQuantity, 500);
 
 export const useCartStore = create<CartStore>((set, get) => ({
   items: [],
+  cartId: null,
   total: 0,
   isLoading: false,
   error: null,
@@ -28,7 +30,12 @@ export const useCartStore = create<CartStore>((set, get) => ({
     set({ isLoading: true, error: null });
     try {
       const cart = await cartActions.fetchCart();
-      set({ items: cart.cartItems, total: cart.total, isLoading: false });
+      set({
+        items: cart.cartItems,
+        total: cart.total,
+        isLoading: false,
+        cartId: cart._id,
+      });
     } catch (error) {
       set({
         error: error instanceof Error ? error.message : "Error loading cart",

@@ -125,6 +125,10 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
     maxAge: 7 * 24 * 60 * 60, // 7 days
   },
+  pages: {
+    signIn: "/auth/signin", // Specify your sign-in page path
+    error: "/auth/signin", // Redirect to sign-in page on error
+  },
 };
 
 export async function refreshAccessToken(token: Token): Promise<Token | null> {
