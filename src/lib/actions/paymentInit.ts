@@ -5,23 +5,27 @@ import { authOptions } from "../auth";
 
 const URL = process.env.NEXT_PUBLIC_API_URL;
 
+async function getEmail() {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.email) {
+    throw new Error("Please log in to continue");
+  }
+  return session.user.email;
+}
+
 async function getAccessToken() {
   const session = await getServerSession(authOptions);
   if (!session?.accessToken) {
     throw new Error("Please log in to continue");
   }
-  if (session?.user?.email) {
-    throw new Error("Please verify your email to continue");
-  }
-  if (!session.user) {
-    throw new Error("User information is missing");
-  }
-  return { accessToken: session.accessToken, email: session.user.email };
+  return session.accessToken;
 }
 
 export async function initPayment(orderId: string) {
   try {
-    const { accessToken, email } = await getAccessToken();
+    const accessToken = await getAccessToken();
+    const email = await getEmail();
+
     const response = await fetch(`${URL}payment/initialize`, {
       method: "POST",
       headers: {
@@ -30,10 +34,12 @@ export async function initPayment(orderId: string) {
       },
       body: JSON.stringify({ orderId, email }),
     });
-
+    console.log(orderId, email);
     const result = await response.json();
+    console.log(result);
 
     if (!response.ok) {
+      console.log(result);
       return {
         success: false,
         message: result.message || "Failed to initialize payment",
@@ -56,7 +62,7 @@ export async function initPayment(orderId: string) {
 }
 
 export async function verifyPayment(reference: string) {
-  const { accessToken } = await getAccessToken();
+  const accessToken = await getAccessToken();
   const response = await fetch(`${URL}payment/verify?reference=${reference}`, {
     method: "POST",
     headers: {
@@ -72,4 +78,8 @@ export async function verifyPayment(reference: string) {
       message: result.message || "Failed to initialize payment",
     };
   }
+  return {
+    success: true,
+    data: result.receipt,
+  };
 }

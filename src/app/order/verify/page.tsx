@@ -1,8 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import Loading from "../loading";
 import { verifyPayment } from "@/lib/actions/paymentInit";
+import { PaymentFailed } from "@/components/PaymentFailed";
+import { PaymentSuccess } from "@/components/PaymentSuccess";
+import Loading from "@/app/loading";
 
 export default function VerifyOrderPage() {
   const searchParams = useSearchParams();

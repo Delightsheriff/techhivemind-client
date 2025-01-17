@@ -17,7 +17,7 @@ async function getAccessToken() {
 export async function createOrder(data: CreateOrderInput) {
   try {
     const accessToken = await getAccessToken();
-    const response = await fetch(`${URL}orders/create`, {
+    const response = await fetch(`${URL}order/create`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -27,6 +27,7 @@ export async function createOrder(data: CreateOrderInput) {
     });
 
     const result = await response.json();
+    console.log(result);
 
     if (!response.ok) {
       return {

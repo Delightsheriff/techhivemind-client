@@ -41,6 +41,7 @@ export default function CheckoutForm() {
       }
 
       const paymentResult = await initPayment(orderResult.orderId);
+      console.log(paymentResult);
       if (!paymentResult.success) {
         toast.error("Payment initialization failed. Please try again.");
         console.error("Payment initialization failed");
