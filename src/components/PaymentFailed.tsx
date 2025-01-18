@@ -9,8 +9,8 @@ export function PaymentFailed() {
         We&apos;re sorry, but there was an issue processing your payment. Please
         try again or contact support.
       </p>
-      <Link href="/orders">
-        <Button variant="outline">View Orders</Button>
+      <Link href="/orders" className="mt-4 inline-block">
+        <Button>View Orders</Button>
       </Link>
     </div>
   );

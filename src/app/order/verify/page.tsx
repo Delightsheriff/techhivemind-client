@@ -18,7 +18,6 @@ export default function VerifyOrderPage() {
       if (reference) {
         try {
           const result = await verifyPayment(reference);
-
           if (!result.success) {
             setError(true);
             setVerificationData(null);

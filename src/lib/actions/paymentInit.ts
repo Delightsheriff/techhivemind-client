@@ -35,10 +35,8 @@ export async function initPayment(orderId: string) {
       body: JSON.stringify({ orderId, email }),
     });
     const result = await response.json();
-    console.log(result);
 
     if (!response.ok) {
-      console.log(result);
       return {
         success: false,
         message: result.message || "Failed to initialize payment",
@@ -61,24 +59,35 @@ export async function initPayment(orderId: string) {
 }
 
 export async function verifyPayment(reference: string) {
-  const accessToken = await getAccessToken();
-  const response = await fetch(`${URL}payment/verify?reference=${reference}`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-Type": "application/json",
-    },
-  });
-  const result = await response.json();
+  try {
+    const accessToken = await getAccessToken();
+    const response = await fetch(`${URL}payment/verify`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ reference }),
+    });
+    const result = await response.json();
 
-  if (!response.ok) {
+    if (!response.ok) {
+      return {
+        success: false,
+        message: result.message || "Failed to verify payment",
+      };
+    }
+
+    return {
+      success: true,
+      data: result.receipt,
+    };
+  } catch (error) {
+    console.error("Payment verification error:", error);
     return {
       success: false,
-      message: result.message || "Failed to initialize payment",
+      message:
+        error instanceof Error ? error.message : "An unexpected error occurred",
     };
   }
-  return {
-    success: true,
-    data: result.receipt,
-  };
 }

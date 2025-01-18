@@ -16,15 +16,14 @@ import Nav from "./bottomnav";
 import WishlistDialog from "./WishlistDialog";
 import CartDialog from "./CartDialog";
 import SearchDialog from "./SearchDialog";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import { useCartStore } from "@/store/CartStore";
 import { useWishListStore } from "@/store/WishListStore";
 
 export default function Navbar() {
-  const { status, data: session } = useSession();
+  const { status } = useSession();
   const pathname = usePathname();
-  const router = useRouter();
 
   const isAuthenticated = status === "authenticated";
 
@@ -37,14 +36,6 @@ export default function Navbar() {
       fetchWishList();
     }
   }, [isAuthenticated, fetchCart, fetchWishList]);
-
-  React.useEffect(() => {
-    if (session?.error === "RefreshAccessTokenError") {
-      signOut({ redirect: false }).then(() => {
-        router.push(`/auth/signin?redirect=${pathname}`);
-      });
-    }
-  }, [session, pathname, router]);
 
   const handleSignOut = async () => {
     await signOut({ callbackUrl: "/" });
