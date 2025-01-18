@@ -34,7 +34,6 @@ export async function initPayment(orderId: string) {
       },
       body: JSON.stringify({ orderId, email }),
     });
-    console.log(orderId, email);
     const result = await response.json();
     console.log(result);
 

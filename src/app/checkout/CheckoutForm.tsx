@@ -7,10 +7,11 @@ import { useCartStore } from "@/store/CartStore";
 import { Input } from "@/components/ui/input";
 import { ShippingAddress } from "@/types/checkout";
 import { createOrder } from "@/lib/actions/checkoutActions";
-import { initPayment } from "@/lib/actions/paymentInit";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 export default function CheckoutForm() {
+  const router = useRouter();
   const { cartId } = useCartStore();
   const [shippingAddress, setShippingAddress] = useState<ShippingAddress>({
     street: "",
@@ -31,29 +32,41 @@ export default function CheckoutForm() {
     setIsLoading(true);
 
     try {
+      // First, validate the shipping address
+      if (!validateShippingAddress(shippingAddress)) {
+        toast.error("Please fill in all shipping address fields correctly");
+        return;
+      }
+
+      // Store shipping address in session storage for recovery
+      sessionStorage.setItem(
+        "shippingAddress",
+        JSON.stringify(shippingAddress)
+      );
+
+      // Create order and initialize payment in one request
       const orderResult = await createOrder({
         shippingAddress,
         cartId,
       });
-      if (!orderResult.success) {
-        console.error("Order creation failed:", orderResult);
-        toast.error("Something went wrong. Please try again later.");
-      }
 
-      const paymentResult = await initPayment(orderResult.orderId);
-      console.log(paymentResult);
-      if (!paymentResult.success) {
-        toast.error("Payment initialization failed. Please try again.");
-        console.error("Payment initialization failed");
+      if (!orderResult.success) {
+        toast.error(orderResult.message || "Failed to create order");
         return;
       }
 
-      window.location.href = paymentResult.authorization_url;
+      // Redirect to payment page with order ID
+      router.push(`/checkout/payment/${orderResult.orderId}`);
     } catch (error) {
-      console.log(error);
+      console.error(error);
+      toast.error("An unexpected error occurred. Please try again.");
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const validateShippingAddress = (address: ShippingAddress): boolean => {
+    return Object.values(address).every((value) => value.trim().length > 0);
   };
 
   return (
@@ -110,7 +123,7 @@ export default function CheckoutForm() {
       </div>
 
       <Button type="submit" disabled={isLoading} className="w-full">
-        {isLoading ? "Processing..." : "Proceed to Payment"}
+        {isLoading ? "Processing..." : "Continue to Payment"}
       </Button>
     </form>
   );
