@@ -5,10 +5,10 @@ export const categories = [
   { name: "Sale", href: "/sale", className: "hover:text-red-500 font-medium" },
   { name: "Computers", href: "/computers" },
   { name: "Tablets", href: "/tablets" },
-  { name: "Drones & Cameras", href: "/drones-cameras" },
-  { name: "Mobile", href: "/mobile" },
-  { name: "TV & Home Cinema", href: "/tv-cinema" },
-  { name: "Wearable Tech", href: "/wearables" },
+  { name: "Drones & Cameras", href: "/drones_&_cameras" },
+  { name: "Smartphones", href: "/smartphones" },
+  { name: "TV & Home Cinema", href: "/tv_&home_cinema" },
+  { name: "Wearable Tech", href: "/wearable_tech" },
 ];
 
 export const audioProducts = [
