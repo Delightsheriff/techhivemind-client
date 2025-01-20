@@ -70,7 +70,7 @@ export default function NewProductPage() {
 
       if (result.success) {
         toast.success("Product created successfully");
-        router.push("/vendors");
+        router.push("/vendor");
       } else {
         toast.error(result.message);
       }

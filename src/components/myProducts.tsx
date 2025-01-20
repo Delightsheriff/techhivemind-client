@@ -29,7 +29,7 @@ const MyProducts = ({ products }: { products: Product[] }) => {
             Start by adding your first product.
           </p>
           <Button
-            onClick={() => router.push("/vendors/products/new")}
+            onClick={() => router.push("/vendor/products/new")}
             className="mt-6"
           >
             Add Your First Product
@@ -63,9 +63,7 @@ const MyProducts = ({ products }: { products: Product[] }) => {
                 <Button
                   variant="outline"
                   className="w-full mt-4"
-                  onClick={() =>
-                    router.push(`/vendors/products/${product._id}`)
-                  }
+                  onClick={() => router.push(`/vendor/products/${product._id}`)}
                 >
                   Edit Product
                 </Button>

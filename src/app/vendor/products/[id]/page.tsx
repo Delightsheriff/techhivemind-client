@@ -19,6 +19,10 @@ import toast from "react-hot-toast";
 import Image from "next/image";
 import { Label } from "@/components/ui/label";
 
+type Props = {
+  params: Promise<{ id: string }>;
+};
+
 interface Product {
   _id: string;
   name: string;
@@ -42,11 +46,7 @@ const categories = [
   { value: "tv_&home_cinema", label: "TV & Home Cinema" },
 ];
 
-export default function EditProductPage({
-  params,
-}: {
-  params: { id: string };
-}) {
+export default function EditProductPage({ params }: Props) {
   const router = useRouter();
   const [product, setProduct] = useState<Product | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -57,7 +57,8 @@ export default function EditProductPage({
 
   useEffect(() => {
     async function fetchProduct() {
-      const result = await getOneProduct(params.id);
+      const { id: productId } = await params;
+      const result = await getOneProduct(productId);
       if (result.success) {
         setProduct(result.product);
         setImagesPreviews(result.product.images);
@@ -69,7 +70,7 @@ export default function EditProductPage({
     }
 
     fetchProduct();
-  }, [params.id]);
+  }, [params]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -87,6 +88,7 @@ export default function EditProductPage({
     e.preventDefault();
     setIsSubmitting(true);
 
+    const { id } = await params;
     try {
       const formData = new FormData(e.currentTarget);
       formData.delete("images");
@@ -100,11 +102,11 @@ export default function EditProductPage({
         formData.delete("salePrice");
       }
 
-      const result = await updateProduct(params.id, formData);
+      const result = await updateProduct(id, formData);
 
       if (result.success) {
         toast.success("Product updated successfully");
-        router.push("/vendors");
+        router.push("/vendor");
       } else {
         toast.error(result.message);
       }
