@@ -15,7 +15,7 @@ const MyProducts = ({ products }: { products: Product[] }) => {
     <div className="container mx-auto py-10 px-4">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">My Products</h1>
-        <Button onClick={() => router.push("/vendors/products/new")}>
+        <Button onClick={() => router.push("/vendor/products/new")}>
           <Plus className="mr-2 h-4 w-4" />
           Add Product
         </Button>
