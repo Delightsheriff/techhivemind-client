@@ -30,7 +30,7 @@ export default function CartDialog({ isAuthenticated }: CartDialogProps) {
     setIsOpen(false);
   }, [pathname]);
 
-  const tempTotal = items.reduce((sum, item) => {
+  const tempTotal = items?.reduce((sum, item) => {
     const price = item.product.onSale
       ? item.product.salePrice
       : item.product.price;
@@ -42,7 +42,7 @@ export default function CartDialog({ isAuthenticated }: CartDialogProps) {
       <DialogTrigger asChild>
         <Button variant="ghost" size="icon" className="relative">
           <ShoppingCart className="h-5 w-5" />
-          {items.length > 0 && (
+          {items?.length > 0 && (
             <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-primary text-xs text-white flex items-center justify-center">
               {items.length}
             </span>
@@ -67,13 +67,13 @@ export default function CartDialog({ isAuthenticated }: CartDialogProps) {
             </div>
           ) : error ? (
             <p className="text-sm text-red-500">{error}</p>
-          ) : items.length === 0 ? (
+          ) : items?.length === 0 ? (
             <p className="text-sm text-muted-foreground text-center">
               Your cart is empty
             </p>
           ) : (
             <>
-              {items.map((item) => (
+              {items?.map((item) => (
                 <div
                   key={item.product._id}
                   className="flex items-center py-4 border-b"

@@ -37,7 +37,7 @@ export default function WishlistDialog({
         <Button variant="ghost" size="icon" className="shrink-0">
           <Heart
             className={`h-5 w-5 ${
-              items.length > 0 ? "fill-red-500 text-red-500" : ""
+              items?.length > 0 ? "fill-red-500 text-red-500" : ""
             }`}
           />
           <span className="sr-only">Open wishlist</span>
@@ -63,13 +63,13 @@ export default function WishlistDialog({
             </div>
           ) : error ? (
             <p className="text-sm text-red-500">{error}</p>
-          ) : items.length === 0 ? (
+          ) : items?.length === 0 ? (
             <p className="text-sm text-muted-foreground text-center">
               Your wishlist is empty
             </p>
           ) : (
             <>
-              {items.map((item) => (
+              {items?.map((item) => (
                 <div
                   key={item?._id}
                   className="flex items-center py-4 border-b"

@@ -24,11 +24,12 @@ export async function updateProfilePicture(formData: FormData) {
     });
 
     const result = await response.json();
+    console.log(result);
 
     if (!response.ok) {
       return {
         success: false,
-        message: result.message || "Failed to update profile picture",
+        message: "Failed to update profile picture",
       };
     }
 
@@ -69,6 +70,9 @@ export async function updateProfile(formData: FormData) {
     });
 
     const result = await response.json();
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
 
     if (!response.ok) {
       return {
@@ -76,6 +80,7 @@ export async function updateProfile(formData: FormData) {
         message: result.message || "Failed to update profile",
       };
     }
+    console.log(result);
 
     return {
       success: true,

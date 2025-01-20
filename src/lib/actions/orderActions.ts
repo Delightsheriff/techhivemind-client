@@ -15,7 +15,7 @@ export async function getOrders() {
       };
     }
 
-    const response = await fetch(`${URL}orders`, {
+    const response = await fetch(`${URL}order`, {
       headers: {
         Authorization: `Bearer ${session.accessToken}`,
       },

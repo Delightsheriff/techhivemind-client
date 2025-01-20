@@ -42,7 +42,6 @@ export default function LoginPage() {
         password: data.password,
         redirect: false,
       });
-
       if (result?.error) {
         setError(result.error);
       } else if (result?.ok) {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSession, signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,13 +9,31 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Loader2, Upload, LogOut } from "lucide-react";
 import { updateProfile, updateProfilePicture } from "@/lib/actions/userActions";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 export default function AccountPage() {
-  const { data: session, update } = useSession();
+  const { data: session, update, status } = useSession();
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
   const [isUpdatingPicture, setIsUpdatingPicture] = useState(false);
+  const [isVerifyingSession, setIsVerifyingSession] = useState(true);
 
   const user = session?.user;
+
+  const isAuthenticated = status === "authenticated";
+
+  useEffect(() => {
+    if (status === "loading") {
+      setIsVerifyingSession(true);
+      return;
+    }
+
+    if (status === "unauthenticated") {
+      router.push("/auth/signin?redirect=/account");
+    } else {
+      setIsVerifyingSession(false);
+    }
+  }, [isAuthenticated, router, status]);
 
   const handleProfileUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -30,6 +48,7 @@ export default function AccountPage() {
         toast.success(result.message);
       } else {
         toast.error(result.message);
+        console.error(result.message);
       }
     } catch (error) {
       toast.error("Failed to update profile");
@@ -51,6 +70,7 @@ export default function AccountPage() {
 
     try {
       const result = await updateProfilePicture(formData);
+      console.log(result);
 
       if (result.success) {
         await update(result.data);
@@ -66,12 +86,16 @@ export default function AccountPage() {
     }
   };
 
-  if (!user) {
+  if (isVerifyingSession) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
-        <Loader2 className="h-8 w-8 animate-spin text-gray-500" />
+      <div className="flex items-center justify-center h-screen">
+        <Loader2 className="h-8 w-8 animate-spin" />
       </div>
     );
+  }
+
+  if (!user) {
+    return null;
   }
 
   return (

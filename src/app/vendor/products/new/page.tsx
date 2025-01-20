@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createProduct } from "@/lib/actions/productActions";
 import { Button } from "@/components/ui/button";
@@ -18,6 +18,7 @@ import { Loader2, Upload } from "lucide-react";
 import toast from "react-hot-toast";
 import Image from "next/image";
 import { Label } from "@/components/ui/label";
+import { useSession } from "next-auth/react";
 
 const categories = [
   { value: "computers", label: "Computers" },
@@ -32,10 +33,20 @@ const categories = [
 
 export default function NewProductPage() {
   const router = useRouter();
+  const { status } = useSession();
   const [isLoading, setIsLoading] = useState(false);
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [imagesPreviews, setImagesPreviews] = useState<string[]>([]);
   const [onSale, setOnSale] = useState(false);
+
+  const isAuthenticated = status === "authenticated";
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      router.push("/auth/signin?redirect=/vendor/products/new");
+      return;
+    }
+  }, [isAuthenticated, router]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);

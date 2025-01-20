@@ -9,6 +9,7 @@ import { Loader2, Package } from "lucide-react";
 import Image from "next/image";
 import { formatDate } from "@/lib/utils";
 import { getOrders } from "@/lib/actions/orderActions";
+import { useSession } from "next-auth/react";
 
 interface OrderItem {
   product: {
@@ -37,15 +38,34 @@ interface Order {
 }
 
 export default function OrdersPage() {
+  const { status } = useSession();
   const router = useRouter();
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const [isVerifyingSession, setIsVerifyingSession] = useState(true);
+
+  const isAuthenticated = status === "authenticated";
+
+  useEffect(() => {
+    if (status === "loading") {
+      setIsVerifyingSession(true);
+      return;
+    }
+
+    if (status === "unauthenticated") {
+      router.push("/auth/signin?redirect=/account");
+    } else {
+      setIsVerifyingSession(false);
+    }
+  }, [isAuthenticated, router, status]);
+
   useEffect(() => {
     async function fetchOrders() {
       try {
         const result = await getOrders();
+
         if (result.success) {
           setOrders(result.orders);
         } else {
@@ -74,6 +94,14 @@ export default function OrdersPage() {
         return "bg-gray-100 text-gray-800";
     }
   };
+
+  if (isVerifyingSession) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Loader2 className="h-8 w-8 text-gray-500 animate-spin" />
+      </div>
+    );
+  }
 
   if (isLoading) {
     return (
