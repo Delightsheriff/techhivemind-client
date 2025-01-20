@@ -6,6 +6,7 @@ import Image from "next/image";
 import { Card } from "./ui/card";
 import { Package, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { formatPrice } from "@/lib/utils";
 
 const MyProducts = ({ products }: { products: Product[] }) => {
   const router = useRouter();
@@ -53,7 +54,7 @@ const MyProducts = ({ products }: { products: Product[] }) => {
                 </p>
                 <div className="flex justify-between items-center">
                   <span className="font-medium">
-                    ${product.price.toLocaleString()}
+                    {formatPrice(product.price)}
                   </span>
                   <span className="text-sm text-gray-500">
                     Stock: {product.stock}
