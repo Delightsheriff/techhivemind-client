@@ -25,7 +25,6 @@ export async function becomeVendor() {
     });
 
     const result = await response.json();
-    console.log(result);
 
     if (!response.ok) {
       return {

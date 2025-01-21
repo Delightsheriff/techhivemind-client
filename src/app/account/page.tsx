@@ -44,7 +44,14 @@ export default function AccountPage() {
       const result = await updateProfile(formData);
 
       if (result.success) {
-        await update(result.data);
+        // Update the session with the new user data
+        await update({
+          ...session,
+          user: {
+            ...session?.user,
+            ...(result?.data?.user ?? {}),
+          },
+        });
         toast.success(result.message);
       } else {
         toast.error(result.message);
@@ -64,16 +71,35 @@ export default function AccountPage() {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    // Check file type
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please upload an image file");
+      return;
+    }
+
+    // Check file size (5MB limit)
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Image size should be less than 5MB");
+      return;
+    }
+
     setIsUpdatingPicture(true);
     const formData = new FormData();
-    formData.append("profilePicture", file);
+    formData.append("file", file);
 
     try {
       const result = await updateProfilePicture(formData);
       console.log(result);
 
       if (result.success) {
-        await update(result.data);
+        // Update the session with the new user data
+        await update({
+          ...session,
+          user: {
+            ...session?.user,
+            ...(result?.data?.user ?? {}),
+          },
+        });
         toast.success(result.message);
       } else {
         toast.error(result.message);

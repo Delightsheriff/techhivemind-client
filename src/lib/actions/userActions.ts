@@ -15,16 +15,31 @@ export async function updateProfilePicture(formData: FormData) {
       };
     }
 
+    // Check file size before upload (limit to 5MB)
+    const file = formData.get("file") as File;
+    if (file && file.size > 5 * 1024 * 1024) {
+      return {
+        success: false,
+        message: "Image size should be less than 5MB",
+      };
+    }
+
+    // Set a longer timeout for the fetch request
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 seconds timeout
+
     const response = await fetch(`${URL}user/upload/profile`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${session.accessToken}`,
       },
       body: formData,
+      signal: controller.signal,
     });
 
+    clearTimeout(timeoutId);
+
     const result = await response.json();
-    console.log(result);
 
     if (!response.ok) {
       return {
@@ -36,7 +51,9 @@ export async function updateProfilePicture(formData: FormData) {
     return {
       success: true,
       message: result.message || "Profile picture updated successfully",
-      data: result.data,
+      data: {
+        user: result.data.user, // Make sure we return the complete user object
+      },
     };
   } catch (error) {
     return {
@@ -80,12 +97,13 @@ export async function updateProfile(formData: FormData) {
         message: result.message || "Failed to update profile",
       };
     }
-    console.log(result);
 
     return {
       success: true,
       message: result.message || "Profile updated successfully",
-      data: result.data,
+      data: {
+        user: result.data.user, // Make sure we return the complete user object
+      },
     };
   } catch (error) {
     return {
