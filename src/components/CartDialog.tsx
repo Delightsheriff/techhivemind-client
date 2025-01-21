@@ -30,12 +30,14 @@ export default function CartDialog({ isAuthenticated }: CartDialogProps) {
     setIsOpen(false);
   }, [pathname]);
 
-  const tempTotal = items?.reduce((sum, item) => {
-    const price = item.product.onSale
-      ? item.product.salePrice
-      : item.product.price;
-    return sum + price * item.quantity;
-  }, 0);
+  const tempTotal =
+    items?.reduce((sum, item) => {
+      if (!item?.product) return sum; // Skip items with missing product data
+      const price = item.product.onSale
+        ? item.product.salePrice ?? 0
+        : item.product.price ?? 0;
+      return sum + price * (item.quantity ?? 0);
+    }, 0) ?? 0;
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>

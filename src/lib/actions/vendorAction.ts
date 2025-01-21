@@ -37,7 +37,9 @@ export async function becomeVendor() {
     return {
       success: true,
       message: result.message || "Successfully became a vendor",
-      data: result.user,
+      data: {
+        user: result.data.user, // Make sure we return the complete user object
+      },
     };
   } catch (error) {
     return {
