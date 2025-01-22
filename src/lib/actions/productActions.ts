@@ -60,7 +60,7 @@ export async function getOneProduct(productId: string) {
 
     return {
       success: true,
-      product: result.data,
+      product: result.data.product,
     };
   } catch (error) {
     return {
