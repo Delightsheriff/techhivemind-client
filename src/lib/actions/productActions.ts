@@ -14,7 +14,6 @@ export async function createProduct(formData: FormData) {
         message: "Please log in to continue",
       };
     }
-
     const response = await fetch(`${URL}product/create-product`, {
       method: "POST",
       headers: {

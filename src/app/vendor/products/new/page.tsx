@@ -19,6 +19,13 @@ import toast from "react-hot-toast";
 import Image from "next/image";
 import { Label } from "@/components/ui/label";
 import { useSession } from "next-auth/react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 const categories = [
   { value: "computers", label: "Computers" },
@@ -50,9 +57,16 @@ export default function NewProductPage() {
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-    if (files.length > 4) {
+    if (files.length > 5) {
       toast.error("Maximum 4 images allowed");
       return;
+    }
+    // Check size of each file
+    for (const file of files) {
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error("Each image must be less than 5MB");
+        return;
+      }
     }
 
     setSelectedImages(files);
@@ -95,188 +109,199 @@ export default function NewProductPage() {
 
   return (
     <div className="container mx-auto py-10 px-4 max-w-2xl">
-      <h1 className="text-3xl font-bold mb-8">Add New Product</h1>
+      <Card>
+        <CardHeader className="space-y-1">
+          <CardTitle className="text-3xl font-bold">Add New Product</CardTitle>
+          <CardDescription>
+            Fill in the details below to add a new product
+          </CardDescription>
+        </CardHeader>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div>
-          <Label
-            htmlFor="name"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Name:
-          </Label>
-          <Input id="name" name="name" required className="mt-1" />
-        </div>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <Label
+                htmlFor="name"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Name:
+              </Label>
+              <Input id="name" name="name" required className="mt-1" />
+            </div>
 
-        <div>
-          <Label
-            htmlFor="price"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Price:
-          </Label>
-          <Input
-            id="price"
-            name="price"
-            type="number"
-            step="0.01"
-            required
-            className="mt-1"
-          />
-        </div>
+            <div>
+              <Label
+                htmlFor="price"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Price:
+              </Label>
+              <Input
+                id="price"
+                name="price"
+                type="number"
+                step="0.01"
+                required
+                className="mt-1"
+              />
+            </div>
 
-        <div>
-          <Label
-            htmlFor="description"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Description:
-          </Label>
-          <Textarea
-            id="description"
-            name="description"
-            required
-            className="mt-1"
-            rows={4}
-          />
-        </div>
+            <div>
+              <Label
+                htmlFor="description"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Description:
+              </Label>
+              <Textarea
+                id="description"
+                name="description"
+                required
+                className="mt-1"
+                rows={4}
+              />
+            </div>
 
-        <div>
-          <Label
-            htmlFor="category"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Category:
-          </Label>
-          <Select name="category" required>
-            <SelectTrigger>
-              <SelectValue placeholder="Select a category" />
-            </SelectTrigger>
-            <SelectContent>
-              {categories.map((category) => (
-                <SelectItem key={category.value} value={category.value}>
-                  {category.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+            <div>
+              <Label
+                htmlFor="category"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Category:
+              </Label>
+              <Select name="category" required>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a category" />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.map((category) => (
+                    <SelectItem key={category.value} value={category.value}>
+                      {category.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
 
-        <div>
-          <Label
-            htmlFor="stock"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Stock:
-          </Label>
-          <Input
-            id="stock"
-            name="stock"
-            type="number"
-            required
-            min="0"
-            className="mt-1"
-          />
-        </div>
+            <div>
+              <Label
+                htmlFor="stock"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Stock:
+              </Label>
+              <Input
+                id="stock"
+                name="stock"
+                type="number"
+                required
+                min="0"
+                className="mt-1"
+              />
+            </div>
 
-        <div className="flex items-center space-x-2">
-          <Checkbox
-            id="onSale"
-            checked={onSale}
-            onCheckedChange={(checked) => setOnSale(checked as boolean)}
-          />
-          <Label
-            htmlFor="onSale"
-            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          >
-            On Sale
-          </Label>
-        </div>
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="onSale"
+                checked={onSale}
+                onCheckedChange={(checked) => setOnSale(checked as boolean)}
+              />
+              <Label
+                htmlFor="onSale"
+                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                On Sale
+              </Label>
+            </div>
 
-        {onSale && (
-          <div>
-            <Label
-              htmlFor="salePrice"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Sale Price:
-            </Label>
-            <Input
-              id="salePrice"
-              name="salePrice"
-              type="number"
-              step="0.01"
-              className="mt-1"
-              required
-            />
-          </div>
-        )}
-
-        <div>
-          <Label className="block text-sm font-medium text-gray-700">
-            Product Images:
-          </Label>
-          <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
-            <div className="space-y-1 text-center">
-              <Upload className="mx-auto h-12 w-12 text-gray-400" />
-              <div className="flex text-sm text-gray-600">
+            {onSale && (
+              <div>
                 <Label
-                  htmlFor="images"
-                  className="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500"
+                  htmlFor="salePrice"
+                  className="block text-sm font-medium text-gray-700"
                 >
-                  <span>Upload images</span>
-                  <Input
-                    id="images"
-                    name="images"
-                    type="file"
-                    multiple
-                    accept="image/*"
-                    className="sr-only"
-                    onChange={handleImageChange}
-                    required
-                  />
+                  Sale Price:
                 </Label>
-              </div>
-              <p className="text-xs text-gray-500">
-                PNG, JPG, GIF up to 10MB each
-              </p>
-            </div>
-          </div>
-          {imagesPreviews.length > 0 && (
-            <div className="mt-4 grid grid-cols-2 gap-4">
-              {imagesPreviews.map((preview, index) => (
-                <Image
-                  key={index}
-                  src={preview}
-                  alt={`Preview ${index + 1}`}
-                  className="h-24 w-24 object-cover rounded-md"
+                <Input
+                  id="salePrice"
+                  name="salePrice"
+                  type="number"
+                  step="0.01"
+                  className="mt-1"
+                  required
                 />
-              ))}
-            </div>
-          )}
-        </div>
-
-        <div className="flex gap-4">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => router.back()}
-            className="w-full"
-          >
-            Cancel
-          </Button>
-          <Button type="submit" disabled={isLoading} className="w-full">
-            {isLoading ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Creating...
-              </>
-            ) : (
-              "Add Product"
+              </div>
             )}
-          </Button>
-        </div>
-      </form>
+
+            <div>
+              <Label className="block text-sm font-medium text-gray-700">
+                Product Images:
+              </Label>
+              <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+                <div className="space-y-1 text-center">
+                  <Upload className="mx-auto h-12 w-12 text-gray-400" />
+                  <div className="flex text-sm text-gray-600">
+                    <Label
+                      htmlFor="images"
+                      className="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500"
+                    >
+                      <span>Upload images</span>
+                      <Input
+                        id="images"
+                        name="images"
+                        type="file"
+                        multiple
+                        accept="image/*"
+                        className="sr-only"
+                        onChange={handleImageChange}
+                        required
+                      />
+                    </Label>
+                  </div>
+                  <p className="text-xs text-gray-500">
+                    PNG, JPG, GIF up to 5MB each
+                  </p>
+                </div>
+              </div>
+              {imagesPreviews.length > 0 && (
+                <div className="mt-4 grid grid-cols-2 gap-4">
+                  {imagesPreviews.map((preview, index) => (
+                    <Image
+                      key={index}
+                      src={preview}
+                      alt={`Preview ${index + 1}`}
+                      width={96} // 24 * 4 for the h-24 class
+                      height={96}
+                      className="h-24 w-24 object-cover rounded-md"
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="flex gap-4">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => router.back()}
+                className="w-full"
+              >
+                Cancel
+              </Button>
+              <Button type="submit" disabled={isLoading} className="w-full">
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Creating...
+                  </>
+                ) : (
+                  "Add Product"
+                )}
+              </Button>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 }
