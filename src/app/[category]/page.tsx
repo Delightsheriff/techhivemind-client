@@ -15,7 +15,7 @@ const getCategoryInfo = (slug: string) => {
     ...categories,
     ...audioProducts.map((audio) => ({
       name: audio.name,
-      href: audio.href.split("/")[2],
+      href: audio.href,
     })),
   ];
 
@@ -28,7 +28,7 @@ const getCategoryInfo = (slug: string) => {
     description: `Explore our collection of ${
       category?.name.toLowerCase() || "products"
     }`,
-    showCategoryFilter: ["shop", "sale", "best_sellers"].includes(slug),
+    showCategoryFilter: ["all", "onsale", "best_sellers"].includes(slug),
   };
 };
 
@@ -53,7 +53,9 @@ export default async function CategoryPage({
       ? resolvedSearchParams.category
       : category;
 
+  console.log(categoryToFetch);
   const result = await getProducts(categoryToFetch, page, 12);
+  console.log(result);
 
   if (!result.success) {
     return (

@@ -45,12 +45,12 @@ interface Product {
 const categories = [
   { value: "computers", label: "Computers" },
   { value: "tablets", label: "Tablets" },
-  { value: "drones_&_cameras", label: "Drones & Cameras" },
+  { value: "drones_cameras", label: "Drones & Cameras" },
   { value: "smartphones", label: "Smartphones" },
   { value: "headphones", label: "Headphones" },
   { value: "speakers", label: "Speakers" },
   { value: "wearable_tech", label: "Wearable Tech" },
-  { value: "tv_&home_cinema", label: "TV & Home Cinema" },
+  { value: "tv_home_cinema", label: "TV & Home Cinema" },
 ];
 
 export default function EditProductPage({ params }: Props) {

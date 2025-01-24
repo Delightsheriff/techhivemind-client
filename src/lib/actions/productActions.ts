@@ -138,6 +138,8 @@ export async function getProducts(
       };
     }
 
+    console.log(result);
+
     return {
       success: true,
       products: result.products || result.cachedProducts.products,
