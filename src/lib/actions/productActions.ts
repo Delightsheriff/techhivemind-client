@@ -2,6 +2,7 @@
 
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth";
+import { ProductResponse } from "@/types/product";
 
 const URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -102,6 +103,46 @@ export async function updateProduct(productId: string, formData: FormData) {
       success: true,
       message: result.message || "Product updated successfully",
       product: result.product,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message:
+        error instanceof Error ? error.message : "An unexpected error occurred",
+    };
+  }
+}
+
+export async function getProducts(
+  category?: string,
+  page: number = 1,
+  limit: number = 12
+): Promise<ProductResponse> {
+  try {
+    const queryParams = new URLSearchParams({
+      page: page.toString(),
+      limit: limit.toString(),
+    });
+
+    if (category) {
+      queryParams.append("category", category);
+    }
+
+    const response = await fetch(`${URL}product/products?${queryParams}`);
+    const result = await response.json();
+
+    if (!response.ok) {
+      return {
+        success: false,
+        message: result.message || "Failed to fetch products",
+      };
+    }
+
+    return {
+      success: true,
+      products: result.products,
+      totalPages: result.totalPages,
+      currentPage: result.currentPage,
     };
   } catch (error) {
     return {

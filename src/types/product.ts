@@ -55,3 +55,11 @@ export interface OrderItem {
   };
   quantity: number;
 }
+
+export type ProductResponse = {
+  success: boolean;
+  products?: Product[];
+  totalPages?: number;
+  currentPage?: number;
+  message?: string;
+};

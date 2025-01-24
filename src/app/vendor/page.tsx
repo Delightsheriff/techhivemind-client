@@ -19,6 +19,7 @@ export default function VendorPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -35,8 +36,9 @@ export default function VendorPage() {
 
     // Only fetch products if user is authenticated and is a vendor
     if (isAuthenticated && isVendor) {
-      setIsLoading(true);
       fetchProducts(1);
+    } else {
+      setIsInitialLoading(false);
     }
   }, [isAuthenticated, isVendor, status, router]);
 
@@ -59,6 +61,7 @@ export default function VendorPage() {
       console.error(error);
     } finally {
       setIsLoading(false);
+      setIsInitialLoading(false);
     }
   };
 
@@ -104,10 +107,11 @@ export default function VendorPage() {
   };
 
   // Show loading only during initial authentication check
-  if (status === "loading") {
+  if (status === "loading" || isInitialLoading) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
-        <Loader2 className="h-8 w-8 animate-spin text-gray-500" />
+      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <p className="text-muted-foreground">Loading products...</p>
       </div>
     );
   }
@@ -185,14 +189,23 @@ export default function VendorPage() {
   // Show vendor products if user is a vendor
   return (
     <div className="container mx-auto py-10 px-4">
-      <MyProducts products={products} />
+      {products.length === 0 && !isLoading ? (
+        <div className="text-center py-10">
+          <p className="text-muted-foreground">
+            No products found. Add your first product to get started!
+          </p>
+        </div>
+      ) : (
+        <MyProducts products={products} />
+      )}
+
       {currentPage < totalPages && (
         <div className="flex justify-center mt-8">
           <Button onClick={loadMoreProducts} disabled={isLoading}>
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Loading...
+                Loading more products...
               </>
             ) : (
               "Load More"
