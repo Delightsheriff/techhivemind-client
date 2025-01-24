@@ -13,7 +13,7 @@ export default function AddToWishlistButton({ product }: { product: Product }) {
   const [isInWishlist, setIsInWishlist] = useState(false);
 
   useEffect(() => {
-    setIsInWishlist(items.some((item) => item._id === product._id));
+    setIsInWishlist(items?.some((item) => item._id === product._id));
   }, [items, product._id]);
 
   const handleAddToWishlist = async () => {

@@ -140,9 +140,9 @@ export async function getProducts(
 
     return {
       success: true,
-      products: result.products,
-      totalPages: result.totalPages,
-      currentPage: result.currentPage,
+      products: result.products || result.cachedProducts.products,
+      totalPages: result.totalPages || result.cachedProducts.totalPages,
+      currentPage: result.currentPage || result.cachedProducts.currentPage,
     };
   } catch (error) {
     return {

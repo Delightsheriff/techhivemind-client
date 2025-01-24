@@ -46,7 +46,7 @@ export function ProductGrid({ products }: { products: Product[] }) {
   };
 
   const isInWishlist = (productId: string) => {
-    return wishlistItems.some((item) => item._id === productId);
+    return wishlistItems?.some((item) => item._id === productId) ?? false;
   };
 
   return (
