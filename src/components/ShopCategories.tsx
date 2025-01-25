@@ -7,54 +7,54 @@ export default function ShopCategories() {
     {
       name: "Computers",
       image: "/computers.jpg",
-      href: "/category/computers",
+      href: "/computers",
     },
     {
-      name: "Mobile",
+      name: "Smartphones",
       image: "/mobile.jpg",
-      href: "/category/mobile",
+      href: "/smartphones",
     },
     {
       name: "Drones & Cameras",
       image: "/drones2.jpg",
-      href: "/category/drones-cameras",
+      href: "/drones_cameras",
     },
     {
       name: "Sale",
       icon: <Tag className="w-12 h-12 text-white" />,
-      href: "/sale",
+      href: "/onsale",
       customBg: "bg-purple-600",
     },
     {
       name: "Tablets",
       image: "/tablets.jpg",
-      href: "/category/tablets",
+      href: "/tablets",
     },
     {
       name: "Best Sellers",
       icon: <span className="text-white text-4xl">★</span>,
-      href: "/best-sellers",
+      href: "/best_sellers",
       customBg: "bg-black",
     },
     {
       name: "T.V & Home Cinema",
       image: "/t.v&home.jpg",
-      href: "/category/tv-cinema",
+      href: "/tv_home_cinema",
     },
     {
       name: "Wearable Tech",
       image: "/wearabletech.jpg",
-      href: "/category/wearable",
+      href: "/wearable_tech",
     },
     {
       name: "Speakers",
       image: "/portablespeaker.jpg",
-      href: "/category/speakers",
+      href: "/speakers",
     },
     {
       name: "Headphones",
       image: "/headphones.jpg",
-      href: "/category/headphones",
+      href: "/headphones",
     },
   ];
 
