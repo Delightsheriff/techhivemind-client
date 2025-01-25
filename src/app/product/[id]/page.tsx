@@ -1,9 +1,8 @@
-import AddToCartButton from "@/components/AddToCartButton";
-import AddToWishlistButton from "@/components/AddToWishlistButton";
 import { Card } from "@/components/ui/card";
 import { getOneProduct } from "@/lib/actions/productActions";
 import { formatPrice } from "@/lib/utils";
 import Image from "next/image";
+import Wrapper from "./wrapper";
 
 interface ProductPageProps {
   params: Promise<{ id: string }>;
@@ -71,8 +70,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 </span>
               </div>
               <div className="flex gap-4">
-                <AddToCartButton product={product} />
-                <AddToWishlistButton product={product} />
+                <Wrapper product={product} />
               </div>
             </div>
           </div>
