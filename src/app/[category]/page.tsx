@@ -1,13 +1,12 @@
 import { CategoryHeader } from "@/components/CategoryHeader";
 import { Pagination } from "@/components/Pagination";
-import { ProductFilters } from "@/components/ProductFilter";
-import { ProductGrid } from "@/components/ProductGrid";
+import { ProductsWrapper } from "@/components/ProductsWrapper";
 import { getProducts } from "@/lib/actions/productActions";
 import { audioProducts, categories } from "@/lib/links";
 
 interface CategoryPageProps {
   params: Promise<{ category: string }>;
-  searchParams: Promise<{ page?: string; category?: string }>;
+  searchParams: Promise<{ page?: string }>;
 }
 
 const getCategoryInfo = (slug: string) => {
@@ -18,11 +17,9 @@ const getCategoryInfo = (slug: string) => {
       href: audio.href,
     })),
   ];
-
   const category = allCategories.find(
     (cat) => cat.href.replace("/", "") === slug
   );
-
   return {
     title: category?.name || "Products",
     description: `Explore our collection of ${
@@ -36,24 +33,14 @@ export default async function CategoryPage({
   params,
   searchParams,
 }: CategoryPageProps) {
+  const { category } = await params;
   const resolvedSearchParams = await searchParams;
   const page = resolvedSearchParams.page
     ? parseInt(resolvedSearchParams.page)
     : 1;
-  const { category } = await params;
-
   const { title, description, showCategoryFilter } = getCategoryInfo(category);
 
-  // If we're on a filtered page and have a category filter, use that instead
-  const categoryToFetch =
-    showCategoryFilter &&
-    resolvedSearchParams.category &&
-    resolvedSearchParams.category !== "all"
-      ? resolvedSearchParams.category
-      : category;
-
-  const result = await getProducts(categoryToFetch, page, 12);
-  console.log(result, "client");
+  const result = await getProducts(category, page, 12);
 
   if (!result.success) {
     return (
@@ -66,8 +53,10 @@ export default async function CategoryPage({
   return (
     <div className="container mx-auto px-4 py-8">
       <CategoryHeader title={title} description={description} />
-      {showCategoryFilter && <ProductFilters />}
-      <ProductGrid products={result.products || []} />
+      <ProductsWrapper
+        initialProducts={result.products || []}
+        showCategoryFilter={showCategoryFilter}
+      />
       {result.totalPages && result.totalPages > 1 && (
         <Pagination
           totalPages={result.totalPages}

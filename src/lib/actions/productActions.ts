@@ -124,7 +124,7 @@ export async function getProducts(
       limit: limit.toString(),
     });
 
-    if (category) {
+    if (category && category !== "all") {
       queryParams.append("category", category);
     }
 
@@ -138,13 +138,11 @@ export async function getProducts(
       };
     }
 
-    console.log(result, "áction");
-
     return {
       success: true,
-      products: result.products || result.cachedProducts.products,
-      totalPages: result.totalPages || result.cachedProducts.totalPages,
-      currentPage: result.currentPage || result.cachedProducts.currentPage,
+      products: result.products || result.cachedProducts?.products,
+      totalPages: result.totalPages || result.cachedProducts?.totalPages,
+      currentPage: result.currentPage || result.cachedProducts?.currentPage,
     };
   } catch (error) {
     return {
