@@ -6,18 +6,35 @@ import { Product } from "@/types/product";
 import { ShoppingCart } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
-export default function AddToCartButton({ product }: { product: Product }) {
+export default function AddToCartButton({
+  product,
+  isAuthenticated,
+}: {
+  product: Product;
+  isAuthenticated: boolean;
+}) {
   const { addToCart } = useCartStore();
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const handleAddToCart = async () => {
-    setIsLoading(true);
-    try {
-      await addToCart({
-        product,
-        quantity: 1,
+    if (!isAuthenticated) {
+      toast.error("Please sign in to add items to cart", {
+        icon: "🔒",
+        duration: 3000,
       });
+      router.push(`/auth/signin?redirect=/product/${product._id}`);
+      return;
+    }
+    // Optimistic update
+    const cartItem = { product, quantity: 1 };
+
+    try {
+      setIsLoading(true);
+      // Trigger optimistic update in cart store
+      await addToCart(cartItem);
       toast.success("Added to cart");
     } catch (error) {
       console.error(error);
@@ -29,7 +46,6 @@ export default function AddToCartButton({ product }: { product: Product }) {
 
   return (
     <Button
-      size="lg"
       className="flex-1"
       onClick={handleAddToCart}
       disabled={isLoading || product.stock === 0}

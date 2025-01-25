@@ -1,54 +1,18 @@
 "use client";
-
 import { Card } from "@/components/ui/card";
 import { formatPrice } from "@/lib/utils";
-import { Heart, ShoppingCart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { useState } from "react";
 import { Product } from "@/types/product";
-import { useCartStore } from "@/store/CartStore";
-import { useWishListStore } from "@/store/WishListStore";
-import toast from "react-hot-toast";
+import AddToCartButton from "./AddToCartButton";
+import AddToWishlistButton from "./AddToWishlistButton";
 
-export function ProductGrid({ products }: { products: Product[] }) {
-  const { addToCart } = useCartStore();
-  const { addToWishList, items: wishlistItems } = useWishListStore();
-  const [loadingStates, setLoadingStates] = useState<{
-    [key: string]: boolean;
-  }>({});
+interface ProductGridProps {
+  products: Product[];
+  isAuthenticated: boolean;
+}
 
-  const handleAddToCart = async (product: Product) => {
-    setLoadingStates((prev) => ({ ...prev, [product._id]: true }));
-    try {
-      await addToCart({
-        product,
-        quantity: 1,
-      });
-      toast.success("Added to cart");
-    } catch (error) {
-      toast.error("Failed to add to cart");
-      console.error(error);
-    } finally {
-      setLoadingStates((prev) => ({ ...prev, [product._id]: false }));
-    }
-  };
-
-  const handleAddToWishlist = async (product: Product) => {
-    try {
-      await addToWishList(product);
-      toast.success("Added to wishlist");
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to add to wishlist");
-    }
-  };
-
-  const isInWishlist = (productId: string) => {
-    return wishlistItems?.some((item) => item._id === productId) ?? false;
-  };
-
+export function ProductGrid({ products, isAuthenticated }: ProductGridProps) {
   if (!products.length) {
     return (
       <div className="flex flex-col items-center justify-center py-12 px-4">
@@ -104,26 +68,14 @@ export function ProductGrid({ products }: { products: Product[] }) {
               </div>
             </Link>
             <div className="flex gap-2 mt-4">
-              <Button
-                className="flex-1"
-                onClick={() => handleAddToCart(product)}
-                disabled={loadingStates[product._id] || product.stock === 0}
-              >
-                <ShoppingCart className="w-4 h-4 mr-2" />
-                {product.stock === 0 ? "Out of Stock" : "Add to Cart"}
-              </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => handleAddToWishlist(product)}
-                disabled={isInWishlist(product._id)}
-              >
-                <Heart
-                  className={`w-4 h-4 ${
-                    isInWishlist(product._id) ? "fill-current text-red-500" : ""
-                  }`}
-                />
-              </Button>
+              <AddToCartButton
+                product={product}
+                isAuthenticated={isAuthenticated}
+              />
+              <AddToWishlistButton
+                product={product}
+                isAuthenticated={isAuthenticated}
+              />
             </div>
           </div>
         </Card>

@@ -4,12 +4,19 @@ import { Button } from "@/components/ui/button";
 import { useWishListStore } from "@/store/WishListStore";
 import { Product } from "@/types/product";
 import { Heart } from "lucide-react";
-
+import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 
-export default function AddToWishlistButton({ product }: { product: Product }) {
+export default function AddToWishlistButton({
+  product,
+  isAuthenticated,
+}: {
+  product: Product;
+  isAuthenticated: boolean;
+}) {
   const { addToWishList, items } = useWishListStore();
+  const router = useRouter();
   const [isInWishlist, setIsInWishlist] = useState(false);
 
   useEffect(() => {
@@ -17,8 +24,17 @@ export default function AddToWishlistButton({ product }: { product: Product }) {
   }, [items, product._id]);
 
   const handleAddToWishlist = async () => {
+    if (!isAuthenticated) {
+      toast.error("Please sign in to add items to cart", {
+        icon: "🔒",
+        duration: 3000,
+      });
+      router.push(`/auth/signin?redirect=/product/${product._id}`);
+      return;
+    }
+    const wishlistItem = product;
     try {
-      await addToWishList(product);
+      await addToWishList(wishlistItem);
       toast.success("Added to wishlist");
     } catch (error) {
       console.error(error);
@@ -29,12 +45,12 @@ export default function AddToWishlistButton({ product }: { product: Product }) {
   return (
     <Button
       variant="outline"
-      size="lg"
+      size="icon"
       onClick={handleAddToWishlist}
       disabled={isInWishlist}
     >
       <Heart
-        className={`h-5 w-5 ${isInWishlist ? "fill-current text-red-500" : ""}`}
+        className={`h-4 w-4 ${isInWishlist ? "fill-current text-red-500" : ""}`}
       />
     </Button>
   );

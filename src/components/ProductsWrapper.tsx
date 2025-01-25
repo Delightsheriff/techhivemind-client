@@ -3,6 +3,7 @@
 import { ProductFilters } from "@/components/ProductFilter";
 import { ProductGrid } from "@/components/ProductGrid";
 import { Product } from "@/types/product";
+import { useSession } from "next-auth/react";
 import { useState } from "react";
 
 interface ProductsWrapperProps {
@@ -15,6 +16,8 @@ export function ProductsWrapper({
   showCategoryFilter,
 }: ProductsWrapperProps) {
   const [filteredProducts, setFilteredProducts] = useState(initialProducts);
+  const { status } = useSession();
+  const isAuthenticated = status === "authenticated";
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -26,7 +29,10 @@ export function ProductsWrapper({
         />
       </div>
       <div className="lg:col-span-3">
-        <ProductGrid products={filteredProducts} />
+        <ProductGrid
+          products={filteredProducts}
+          isAuthenticated={isAuthenticated}
+        />
       </div>
     </div>
   );
