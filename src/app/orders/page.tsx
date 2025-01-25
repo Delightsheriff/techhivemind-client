@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Loader2, Package } from "lucide-react";
 import Image from "next/image";
-import { formatDate } from "@/lib/utils";
+import { formatDate, formatPrice } from "@/lib/utils";
 import { getOrders } from "@/lib/actions/orderActions";
 import { useSession } from "next-auth/react";
 
@@ -174,7 +174,7 @@ export default function OrdersPage() {
                       <div>
                         <div className="flex justify-between text-base font-medium text-gray-900">
                           <h3>{item.product.name}</h3>
-                          <p className="ml-4">${item.price.toLocaleString()}</p>
+                          <p className="ml-4">{formatPrice(item.price)}</p>
                         </div>
                         <p className="mt-1 text-sm text-gray-500">
                           Quantity: {item.quantity}
@@ -188,7 +188,7 @@ export default function OrdersPage() {
               <div className="mt-4 border-t pt-4">
                 <div className="flex justify-between text-base font-medium text-gray-900">
                   <p>Total</p>
-                  <p>${order.totalAmount.toLocaleString()}</p>
+                  <p>{formatPrice(order.totalAmount)}</p>
                 </div>
 
                 <div className="mt-4">

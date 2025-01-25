@@ -4,7 +4,7 @@ import { useSearchParams } from "next/navigation";
 import { verifyPayment } from "@/lib/actions/paymentInit";
 import { PaymentFailed } from "@/components/PaymentFailed";
 import { PaymentSuccess } from "@/components/PaymentSuccess";
-import Loading from "@/app/loading";
+import { Loader2 } from "lucide-react";
 
 export default function VerifyOrderPage() {
   const searchParams = useSearchParams();
@@ -42,7 +42,11 @@ export default function VerifyOrderPage() {
   }, [searchParams]);
 
   if (isLoading) {
-    return <Loading />;
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <Loader2 className="h-8 w-8 animate-spin text-gray-500" />
+      </div>
+    );
   }
 
   return (
