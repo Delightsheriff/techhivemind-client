@@ -49,6 +49,21 @@ export function ProductGrid({ products }: { products: Product[] }) {
     return wishlistItems?.some((item) => item._id === productId) ?? false;
   };
 
+  if (!products.length) {
+    return (
+      <div className="flex flex-col items-center justify-center py-12 px-4">
+        <div className="text-center space-y-3">
+          <h3 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
+            No products available
+          </h3>
+          <p className="text-muted-foreground">
+            Check back later for new products in this category.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
       {products.map((product) => (

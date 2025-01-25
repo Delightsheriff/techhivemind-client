@@ -36,7 +36,6 @@ export default async function CategoryPage({
   params,
   searchParams,
 }: CategoryPageProps) {
-  //   const page = searchParams.page ? parseInt(searchParams.page) : 1;
   const resolvedSearchParams = await searchParams;
   const page = resolvedSearchParams.page
     ? parseInt(resolvedSearchParams.page)
@@ -53,9 +52,8 @@ export default async function CategoryPage({
       ? resolvedSearchParams.category
       : category;
 
-  console.log(categoryToFetch);
   const result = await getProducts(categoryToFetch, page, 12);
-  console.log(result);
+  console.log(result, "client");
 
   if (!result.success) {
     return (

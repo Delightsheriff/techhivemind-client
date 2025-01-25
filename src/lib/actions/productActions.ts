@@ -138,7 +138,7 @@ export async function getProducts(
       };
     }
 
-    console.log(result);
+    console.log(result, "áction");
 
     return {
       success: true,
