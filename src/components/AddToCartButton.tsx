@@ -35,7 +35,7 @@ export default function AddToCartButton({
       setIsLoading(true);
       // Trigger optimistic update in cart store
       await addToCart(cartItem);
-      toast.success("Added to cart");
+      // toast.success("Added to cart");
     } catch (error) {
       console.error(error);
       toast.error("Failed to add to cart");

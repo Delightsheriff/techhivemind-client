@@ -35,7 +35,7 @@ export default function AddToWishlistButton({
     const wishlistItem = product;
     try {
       await addToWishList(wishlistItem);
-      toast.success("Added to wishlist");
+      // toast.success("Added to wishlist");
     } catch (error) {
       console.error(error);
       toast.error("Failed to add to wishlist");
