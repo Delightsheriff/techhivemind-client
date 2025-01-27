@@ -152,3 +152,33 @@ export async function getProducts(
     };
   }
 }
+
+export async function searchProducts(query: string, page = 1, limit = 12) {
+  try {
+    console.log("query", query);
+    const response = await fetch(
+      `${URL}product/search?query=${query}&page=${page}&limit=${limit}`
+    );
+    const result = await response.json();
+
+    if (!response.ok) {
+      return {
+        success: false,
+        message: result.message || "Failed to fetch products",
+      };
+    }
+
+    return {
+      success: true,
+      products: result.products || result.cachedProducts?.products,
+      totalPages: result.totalPages || result.cachedProducts?.totalPages,
+      currentPage: result.currentPage || result.cachedProducts?.currentPage,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message:
+        error instanceof Error ? error.message : "An unexpected error occurred",
+    };
+  }
+}
