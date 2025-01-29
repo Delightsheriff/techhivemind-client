@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
-const backgroundImages = ["/hero1.png", "/hero2.png", "/hero3.webp"];
+const backgroundImages = ["/hero1.jpg", "/hero2.jpg", "/hero3.jpg"];
 
 export default function Hero() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
