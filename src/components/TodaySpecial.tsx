@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import todays from "../../public/todays-special.png";
+import todays from "../../public/todays-special.jpg";
 import { Button } from "./ui/button";
 
 export default function TodaySpecial() {
