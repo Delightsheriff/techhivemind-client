@@ -25,16 +25,16 @@ const footerSections: FooterSection[] = [
   {
     title: "Shop",
     links: [
-      { label: "Shop All", href: "/shop-all" },
+      { label: "Shop All", href: "/all" },
       { label: "Computers", href: "/computers" },
       { label: "Tablets", href: "/tablets" },
-      { label: "Mobile", href: "/mobile" },
-      { label: "Wearable Tech", href: "/wearable-tech" },
+      { label: "SmartPhones", href: "/smartphones" },
+      { label: "Wearable Tech", href: "/wearable_tech" },
       { label: "Headphones", href: "/headphones" },
       { label: "Speakers", href: "/speakers" },
-      { label: "T.V & Home Cinema", href: "/tv-home-cinema" },
-      { label: "Sale", href: "/sale" },
-      { label: "Drones & Cameras", href: "/drones-cameras" },
+      { label: "T.V & Home Cinema", href: "/tv_home_cinema" },
+      { label: "Sale", href: "/onsale" },
+      { label: "Drones & Cameras", href: "/drones_cameras" },
     ],
   },
   {
