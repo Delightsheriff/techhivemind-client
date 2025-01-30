@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSession, signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,31 +9,14 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Loader2, Upload, LogOut } from "lucide-react";
 import { updateProfile, updateProfilePicture } from "@/lib/actions/userActions";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
+import type React from "react"; // Added import for React
 
 export default function AccountPage() {
-  const { data: session, update, status } = useSession();
+  const { data: session, update } = useSession();
   const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
   const [isUpdatingPicture, setIsUpdatingPicture] = useState(false);
-  const [isVerifyingSession, setIsVerifyingSession] = useState(true);
 
   const user = session?.user;
-
-  const isAuthenticated = status === "authenticated";
-
-  useEffect(() => {
-    if (status === "loading") {
-      setIsVerifyingSession(true);
-      return;
-    }
-
-    if (status === "unauthenticated") {
-      router.push("/auth/signin?redirect=/account");
-    } else {
-      setIsVerifyingSession(false);
-    }
-  }, [isAuthenticated, router, status]);
 
   const handleProfileUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -44,7 +27,6 @@ export default function AccountPage() {
       const result = await updateProfile(formData);
 
       if (result.success) {
-        // Update the session with the new user data
         await update({
           ...session,
           user: {
@@ -71,13 +53,11 @@ export default function AccountPage() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Check file type
     if (!file.type.startsWith("image/")) {
       toast.error("Please upload an image file");
       return;
     }
 
-    // Check file size (5MB limit)
     if (file.size > 5 * 1024 * 1024) {
       toast.error("Image size should be less than 5MB");
       return;
@@ -89,10 +69,8 @@ export default function AccountPage() {
 
     try {
       const result = await updateProfilePicture(formData);
-      console.log(result);
 
       if (result.success) {
-        // Update the session with the new user data
         await update({
           ...session,
           user: {
@@ -111,14 +89,6 @@ export default function AccountPage() {
       setIsUpdatingPicture(false);
     }
   };
-
-  if (isVerifyingSession) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <Loader2 className="h-8 w-8 animate-spin" />
-      </div>
-    );
-  }
 
   if (!user) {
     return null;
