@@ -1,3 +1,5 @@
+"use client";
+import { useState } from "react";
 import { ChevronDown, Menu } from "lucide-react";
 import { Button } from "./ui/button";
 import {
@@ -18,8 +20,10 @@ import {
 import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
 
 const Sidebar = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
-    <Sheet>
+    <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
         <Button variant="ghost" size="icon" className="lg:hidden">
           <Menu className="h-5 w-5 font-bold" />
@@ -35,6 +39,7 @@ const Sidebar = () => {
             <Link
               key={category.href}
               href={category.href}
+              onClick={() => setIsOpen(false)}
               className={cn(
                 "rounded-md px-2 py-1.5 text-sm font-medium transition-colors hover:bg-accent hover:text-primary-bg hover:text-accent-foreground",
                 category.className
@@ -53,6 +58,7 @@ const Sidebar = () => {
                 <DropdownMenuItem key={item.href} asChild>
                   <Link
                     href={item.href}
+                    onClick={() => setIsOpen(false)}
                     className="flex items-center gap-2 hover:text-primary-bg"
                   >
                     <item.icon className="h-4 w-4" />

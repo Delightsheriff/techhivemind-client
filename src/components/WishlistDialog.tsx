@@ -15,6 +15,7 @@ import Link from "next/link";
 import { useWishListStore } from "@/store/WishListStore";
 import { formatPrice } from "@/lib/utils";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 interface WishlistDialogProps {
   isAuthenticated: boolean;
@@ -26,11 +27,17 @@ export default function WishlistDialog({
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
   const { items, isLoading, error, removeFromWishList } = useWishListStore();
+  const router = useRouter();
 
   // Effect to handle navigation changes
   useEffect(() => {
     setIsOpen(false);
   }, [pathname]);
+
+  const handleNavigate = (id: string) => {
+    setIsOpen(false); // Close dialog before navigating
+    router.push(`/product/${id}`);
+  };
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
@@ -72,6 +79,7 @@ export default function WishlistDialog({
               {items?.map((item) => (
                 <div
                   key={item?._id}
+                  onClick={() => handleNavigate(item._id)} // Navigate when clicked
                   className="flex items-center py-4 border-b"
                 >
                   {/* Product Image */}
