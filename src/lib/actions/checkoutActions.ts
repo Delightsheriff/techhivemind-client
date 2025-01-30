@@ -27,7 +27,6 @@ export async function createOrder(data: CreateOrderInput) {
     });
 
     const result = await response.json();
-    console.log(result);
 
     if (!response.ok) {
       return {
