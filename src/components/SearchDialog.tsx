@@ -26,6 +26,7 @@ export default function SearchDialog() {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const performSearch = async () => {
     if (!query.trim()) {
@@ -78,11 +79,12 @@ export default function SearchDialog() {
   };
 
   const handleProductClick = (productId: string) => {
+    setIsDialogOpen(false);
     router.push(`/product/${productId}`);
   };
 
   return (
-    <Dialog>
+    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
         <Button variant="ghost" size="icon" className="shrink-0">
           <Search className="h-5 w-5" />
