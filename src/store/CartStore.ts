@@ -46,7 +46,7 @@ export const useCartStore = create<CartStore>((set, get) => ({
 
   addToCart: async (item: CartItem) => {
     // Optimistic update
-    const currentItems = get().items;
+    const currentItems = get().items ?? [];
     set({
       items: [...currentItems, item],
       isLoading: true,
@@ -69,7 +69,7 @@ export const useCartStore = create<CartStore>((set, get) => ({
 
   removeFromCart: async (productId: string) => {
     // Optimistic update
-    const currentItems = get().items;
+    const currentItems = get().items ?? [];
     set({
       items: currentItems.filter((item) => item.product._id !== productId),
       isLoading: true,
@@ -94,7 +94,7 @@ export const useCartStore = create<CartStore>((set, get) => ({
     if (quantity < 1) return;
 
     // Optimistic update
-    const currentItems = get().items;
+    const currentItems = get().items ?? [];
     const updatedItems = currentItems.map((item) =>
       item.product._id === productId ? { ...item, quantity } : item
     );

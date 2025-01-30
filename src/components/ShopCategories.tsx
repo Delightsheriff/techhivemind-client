@@ -72,7 +72,7 @@ export default function ShopCategories() {
               className="flex flex-col items-center group"
             >
               <div
-                className={`relative w-40 h-40 rounded-full overflow-hidden mb-4 ${
+                className={`relative w-40 h-40 rounded-full border border-secondary-bg overflow-hidden mb-4 ${
                   category.customBg || "bg-gray-100"
                 } flex items-center justify-center`}
               >

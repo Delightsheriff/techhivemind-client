@@ -30,7 +30,7 @@ export const useWishListStore = create<WishListStore>((set, get) => ({
   },
 
   addToWishList: async (item: WishList) => {
-    const currentItems = get().items;
+    const currentItems = get().items ?? [];
     set({
       items: [...currentItems, item],
       isLoading: true,
@@ -49,7 +49,7 @@ export const useWishListStore = create<WishListStore>((set, get) => ({
   },
 
   removeFromWishList: async (productId: string) => {
-    const currentItems = get().items;
+    const currentItems = get().items ?? [];
     set({
       items: currentItems.filter((item) => item._id !== productId),
       isLoading: true,

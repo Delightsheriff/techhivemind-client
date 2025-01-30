@@ -54,7 +54,7 @@ export default function Hero() {
             asChild
             className="w-fit bg-primary-bg hover:bg-[#6D28D9] rounded-full transition-colors duration-200"
           >
-            <Link href="#" className="px-8 py-6 text-lg">
+            <Link href="best_sellers" className="px-8 py-6 text-lg">
               Shop Now
             </Link>
           </Button>

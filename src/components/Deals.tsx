@@ -28,7 +28,7 @@ export default function Deals() {
               Selected Smartphone Brands
             </p>
             <Link
-              href="#"
+              href="/smartphones"
               className="inline-block bg-white text-black px-8 py-3 rounded-full font-medium hover:bg-gray-100 transition-colors hover:bg-transparent border border-white hover:text-white"
             >
               Shop
@@ -57,7 +57,7 @@ export default function Deals() {
             </h2>
             <p className="text-xl text-white mb-6">Top Headphone Brands</p>
             <Link
-              href="#"
+              href="/headphones"
               className="inline-block bg-white text-black px-8 py-3 rounded-full font-medium hover:bg-transparent border border-white transition-colors hover:text-white"
             >
               Shop
