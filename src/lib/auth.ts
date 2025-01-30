@@ -16,7 +16,6 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        console.log(URL);
         try {
           const res = await fetch(`${URL}auth/signin`, {
             method: "POST",

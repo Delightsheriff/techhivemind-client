@@ -6,7 +6,7 @@ export async function middleware(request: NextRequest) {
 
   // Define public and protected paths
   const publicPaths = ["/auth/signin", "/auth/signup"];
-  const protectedPaths = ["/account", "/orders", "/vendors"];
+  const protectedPaths = ["/account", "/orders", "/vendor"];
 
   const isPublicPath = publicPaths.some((pub) => path.startsWith(pub));
   const isProtectedPath = protectedPaths.some((protect) =>
@@ -22,11 +22,6 @@ export async function middleware(request: NextRequest) {
     // Redirect authenticated users away from public paths (login, register, etc.)
     if (isPublicPath && token) {
       return NextResponse.redirect(new URL("/account", request.url));
-    }
-
-    // Allow access to public paths
-    if (!isProtectedPath) {
-      return NextResponse.next();
     }
 
     // Protect authenticated routes
@@ -57,6 +52,6 @@ export const config = {
     "/auth/signin",
     "/account/:path*",
     "/orders/:path*",
-    "/vendors/:path*",
+    "/vendor/:path*",
   ],
 };

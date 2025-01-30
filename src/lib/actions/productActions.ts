@@ -155,7 +155,6 @@ export async function getProducts(
 
 export async function searchProducts(query: string, page = 1, limit = 12) {
   try {
-    console.log("query", query);
     const response = await fetch(
       `${URL}product/search?query=${query}&page=${page}&limit=${limit}`
     );

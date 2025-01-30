@@ -10,11 +10,9 @@ import { useSession } from "next-auth/react";
 import { becomeVendor, getVendorProducts } from "@/lib/actions/vendorAction";
 import type { Product } from "@/types/product";
 import MyProducts from "@/components/myProducts";
-import { useRouter } from "next/navigation";
 
 export default function VendorPage() {
-  const { data: session, update, status } = useSession();
-  const router = useRouter();
+  const { data: session, update } = useSession();
   const [products, setProducts] = useState<Product[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -25,22 +23,14 @@ export default function VendorPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const isVendor = session?.user?.accountType === "vendor";
-  const isAuthenticated = status === "authenticated";
 
   useEffect(() => {
-    // Redirect if not authenticated
-    if (status === "unauthenticated") {
-      router.push("/auth/signin?redirect=/vendor");
-      return;
-    }
-
-    // Only fetch products if user is authenticated and is a vendor
-    if (isAuthenticated && isVendor) {
+    if (isVendor) {
       fetchProducts(1);
     } else {
       setIsInitialLoading(false);
     }
-  }, [isAuthenticated, isVendor, status, router]);
+  }, [isVendor]);
 
   const fetchProducts = async (page: number) => {
     try {
@@ -107,7 +97,7 @@ export default function VendorPage() {
   };
 
   // Show loading only during initial authentication check
-  if (status === "loading" || isInitialLoading) {
+  if (isInitialLoading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
