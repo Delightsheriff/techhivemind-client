@@ -43,3 +43,43 @@ export async function getOrders() {
     };
   }
 }
+
+export async function deleteOrder(orderId: string) {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session?.accessToken) {
+      return {
+        success: false,
+        message: "Please log in to continue",
+      };
+    }
+
+    const response = await fetch(`${URL}order/delete/${orderId}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${session.accessToken}`,
+      },
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      return {
+        success: false,
+        message: result.message || "Failed to fetch orders",
+      };
+    }
+
+    return {
+      success: true,
+      message: result.message,
+    };
+  } catch (error) {
+    console.error("Error deleting order:", error);
+    return {
+      success: false,
+      message:
+        error instanceof Error ? error.message : "An unexpected error occurred",
+    };
+  }
+}

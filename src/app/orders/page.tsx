@@ -1,86 +1,82 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Loader2, Package } from "lucide-react";
+import { Loader2, Package, Trash2 } from "lucide-react";
 import Image from "next/image";
 import { formatDate, formatPrice } from "@/lib/utils";
-import { getOrders } from "@/lib/actions/orderActions";
-import { useSession } from "next-auth/react";
-
-interface OrderItem {
-  product: {
-    name: string;
-    price: number;
-    images: string[];
-  };
-  quantity: number;
-  price: number;
-}
-
-interface Order {
-  _id: string;
-  orderItems: OrderItem[];
-  totalAmount: number;
-  status: "pending" | "paid" | "cancelled";
-  createdAt: string;
-  shippingAddress: {
-    street: string;
-    city: string;
-    state: string;
-    postalCode: string;
-    country: string;
-  };
-  paymentReference?: string;
-}
+import { getOrders, deleteOrder } from "@/lib/actions/orderActions";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Order } from "@/types/order";
 
 export default function OrdersPage() {
-  const { status } = useSession();
   const router = useRouter();
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  const [isVerifyingSession, setIsVerifyingSession] = useState(true);
-
-  const isAuthenticated = status === "authenticated";
+  const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
-    if (status === "loading") {
-      setIsVerifyingSession(true);
-      return;
-    }
-
-    if (status === "unauthenticated") {
-      router.push("/auth/signin?redirect=/account");
-    } else {
-      setIsVerifyingSession(false);
-    }
-  }, [isAuthenticated, router, status]);
-
-  useEffect(() => {
-    async function fetchOrders() {
-      try {
-        const result = await getOrders();
-
-        if (result.success) {
-          setOrders(result.orders);
-        } else {
-          setError(result.message || "Failed to fetch orders");
-        }
-      } catch (error) {
-        setError("An unexpected error occurred");
-        console.error(error);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
     fetchOrders();
   }, []);
+
+  async function fetchOrders() {
+    try {
+      setIsLoading(true);
+      const result = await getOrders();
+
+      if (result.success) {
+        setOrders(result.orders);
+      } else {
+        setError(result.message || "Failed to fetch orders");
+      }
+    } catch (error) {
+      setError("An unexpected error occurred");
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  const handleDeleteOrder = async (orderId: string) => {
+    const previousOrders = orders;
+
+    // Optimistically update UI
+    startTransition(() => {
+      setOrders(orders.filter((order) => order._id !== orderId));
+    });
+    try {
+      const result = await deleteOrder(orderId);
+      if (!result.success) {
+        // Revert the optimistic update if deletion failed
+        startTransition(() => {
+          setOrders(previousOrders);
+          setError(result.message || "Failed to delete order");
+        });
+      }
+    } catch (error) {
+      // Revert the optimistic update if there's an error
+      startTransition(() => {
+        setOrders(previousOrders);
+        setError("An unexpected error occurred while deleting the order");
+      });
+      console.error(error);
+    }
+  };
 
   const getStatusColor = (status: Order["status"]) => {
     switch (status) {
@@ -95,14 +91,6 @@ export default function OrdersPage() {
     }
   };
 
-  if (isVerifyingSession) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <Loader2 className="h-8 w-8 text-gray-500 animate-spin" />
-      </div>
-    );
-  }
-
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
@@ -114,9 +102,10 @@ export default function OrdersPage() {
   if (error) {
     return (
       <div className="container mx-auto py-10 px-4">
-        <div className="text-center text-red-600">
-          <p>{error}</p>
-        </div>
+        <Alert variant="destructive">
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
       </div>
     );
   }
@@ -147,11 +136,46 @@ export default function OrdersPage() {
                     Placed on {formatDate(order.createdAt)}
                   </p>
                 </div>
-                <div className="mt-2 md:mt-0">
+                <div className="mt-2 md:mt-0 flex items-center">
                   <Badge className={getStatusColor(order.status)}>
                     {order.status.charAt(0).toUpperCase() +
                       order.status.slice(1)}
                   </Badge>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="ghost" size="icon" className="ml-2">
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>
+                          Are you absolutely sure?
+                        </AlertDialogTitle>
+                        <AlertDialogDescription>
+                          This action cannot be undone. This will permanently
+                          delete your order and remove your data from our
+                          servers.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={() => handleDeleteOrder(order._id)}
+                          disabled={isPending}
+                        >
+                          {isPending ? (
+                            <>
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              Deleting...
+                            </>
+                          ) : (
+                            "Delete"
+                          )}
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </div>
               </div>
 
@@ -163,7 +187,7 @@ export default function OrdersPage() {
                   >
                     <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                       <Image
-                        src={item.product.images[0]}
+                        src={item.product.images[0] || "/placeholder.svg"}
                         alt={item.product.name}
                         width={80}
                         height={80}
