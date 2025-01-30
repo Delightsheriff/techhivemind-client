@@ -17,7 +17,6 @@ import { Loader2, Upload } from "lucide-react";
 import toast from "react-hot-toast";
 import Image from "next/image";
 import { Label } from "@/components/ui/label";
-import { useSession } from "next-auth/react";
 import {
   Card,
   CardContent,
@@ -55,7 +54,6 @@ const categories = [
 
 export default function EditProductPage({ params }: Props) {
   const router = useRouter();
-  const { status } = useSession();
   const [product, setProduct] = useState<Product | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -64,14 +62,6 @@ export default function EditProductPage({ params }: Props) {
   const [existingImages, setExistingImages] = useState<string[]>([]);
   const [onSale, setOnSale] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("");
-  const isAuthenticated = status === "authenticated";
-
-  useEffect(() => {
-    if (!isAuthenticated) {
-      router.push("/auth/signin?redirect=/orders");
-      return;
-    }
-  }, [isAuthenticated, router]);
 
   useEffect(() => {
     async function fetchProduct() {

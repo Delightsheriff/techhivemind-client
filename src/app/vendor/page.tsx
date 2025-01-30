@@ -4,12 +4,13 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Loader2 } from "lucide-react";
+import { AlertCircle, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
 import { useSession } from "next-auth/react";
 import { becomeVendor, getVendorProducts } from "@/lib/actions/vendorAction";
 import type { Product } from "@/types/product";
 import MyProducts from "@/components/myProducts";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 export default function VendorPage() {
   const { data: session, update } = useSession();
@@ -96,23 +97,23 @@ export default function VendorPage() {
     }
   };
 
-  // Show loading only during initial authentication check
   if (isInitialLoading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        <p className="text-muted-foreground">Loading products...</p>
+        <p className="text-muted-foreground">Loading vendor information...</p>
       </div>
     );
   }
 
-  // Show error if any
   if (error) {
     return (
       <div className="container mx-auto py-10 px-4">
-        <div className="text-center text-red-600">
-          <p>{error}</p>
-        </div>
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
       </div>
     );
   }
