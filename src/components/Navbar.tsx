@@ -22,13 +22,25 @@ import { useCartStore } from "@/store/CartStore";
 import { useWishListStore } from "@/store/WishListStore";
 
 export default function Navbar() {
-  const { status } = useSession();
+  const { status, data: session } = useSession();
   const pathname = usePathname();
 
   const isAuthenticated = status === "authenticated";
 
   const fetchCart = useCartStore((state) => state.fetchCart);
   const fetchWishList = useWishListStore((state) => state.fetchWishList);
+
+  React.useEffect(() => {
+    if (session?.error === "RefreshAccessTokenError") {
+      console.warn("Session expired, logging out...");
+
+      // First, sign out the user
+      signOut().then(() => {
+        // Then, redirect to the sign-in page
+        window.location.href = `/auth/signin?redirect=${pathname}`;
+      });
+    }
+  }, [session, pathname]);
 
   React.useEffect(() => {
     if (isAuthenticated) {

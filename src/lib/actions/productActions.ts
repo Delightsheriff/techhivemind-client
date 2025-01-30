@@ -129,6 +129,23 @@ export async function getProducts(
     }
 
     const response = await fetch(`${URL}product/products?${queryParams}`);
+
+    // Check if the response is valid JSON
+    const contentType = response.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+      const text = await response.text();
+      console.error("Non-JSON response:", text);
+
+      // Detect auth errors and force a refresh
+      if (text.includes("Unauthorized") || text.includes("Token expired")) {
+        console.warn("Token expired. Redirecting to login.");
+        const redirectUrl = encodeURIComponent(window.location.href);
+        window.location.href = `/auth/signin?redirect=${redirectUrl}`;
+        return { success: false, message: "Session expired. Please log in." };
+      }
+
+      throw new Error("Received invalid JSON response");
+    }
     const result = await response.json();
 
     if (!response.ok) {

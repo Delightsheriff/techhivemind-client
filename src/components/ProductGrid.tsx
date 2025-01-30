@@ -29,7 +29,7 @@ export function ProductGrid({ products, isAuthenticated }: ProductGridProps) {
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  gap-6">
       {products.map((product) => (
         <Card key={product._id} className="group overflow-hidden">
           <Link href={`/product/${product._id}`}>
@@ -50,7 +50,7 @@ export function ProductGrid({ products, isAuthenticated }: ProductGridProps) {
           <div className="p-4">
             <Link href={`/product/${product._id}`}>
               <h3 className="font-medium text-lg truncate">{product.name}</h3>
-              <div className="flex items-center gap-2 mt-2">
+              <div className="flex items-center flex-wrap gap-2 mt-2">
                 {product.onSale ? (
                   <>
                     <span className="text-lg font-bold text-red-500">

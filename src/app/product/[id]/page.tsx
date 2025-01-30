@@ -25,7 +25,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
   return (
     <div className="container mx-auto px-4 py-8">
       <Card className="p-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1  md:grid-cols-2 gap-8">
           <div className="relative aspect-square">
             <Image
               src={product.images[0]}
