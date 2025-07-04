@@ -14,9 +14,9 @@ To run TechHiveMind locally, follow these steps:
 ### Setup
 
 1.  **Clone the repository:**
-    Replace `<repository-url>` with the actual URL of this repository.
+    
     ```bash
-    git clone <repository-url>
+    git clone <https://github.com/Delightsheriff/techhivemind-client>
     cd techhivemind-client
     ```
 
